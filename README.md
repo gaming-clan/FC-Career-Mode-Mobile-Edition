@@ -485,7 +485,7 @@ If you represent a rights holder and have concerns about this project, please co
 ## 📞 Contact
 
 ### Project Maintainer
-- **GitHub:** [@yourusername](https://github.com/gaming-clan)
+- **GitHub:** [@ygaming-clan](https://github.com/gaming-clan)
 - **Project Issues:** [GitHub Issues](https://github.com/gaming-clan/FC-Career-Mode-Mobile-Edition/issues)
 - **Discussions:** [GitHub Discussions](https://github.com/gaming-clan/FC-Career-Mode-Mobile-Edition/discussions)
 
