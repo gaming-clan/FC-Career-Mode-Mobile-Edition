@@ -1,71 +1,279 @@
-import { ScrollView, Text, View, TouchableOpacity } from "react-native";
-import { ScreenContainer } from "@/components/screen-container";
-import { useRouter } from "expo-router";
-import { useColors } from "@/hooks/use-colors";
+import React, { useState, useEffect } from "react";
+import { ScrollView, Text, View, TouchableOpacity, ActivityIndicator, StyleSheet } from "react-native";
+import { Container, Button, Card } from "@/components/ui";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import { colors, spacing, typography, borderRadius, shadows } from "@/constants/design";
+import { db, Save, Club, Player } from "@/lib/db";
+import { Ionicons } from "@expo/vector-icons";
 
-export default function SportingDirectorModeScreen() {
+export default function SportingDirectorScreen() {
   const router = useRouter();
-  const colors = useColors();
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const [save, setSave] = useState<Save | null>(null);
+  const [club, setClub] = useState<Club | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const menuItems = [
-    { id: "scouting", label: "Scouting Network", icon: "🔍" },
-    { id: "recruitment", label: "Recruitment", icon: "👥" },
-    { id: "transfers", label: "Transfer Strategy", icon: "🔄" },
-    { id: "academy", label: "Youth Academy", icon: "🎓" },
-    { id: "analytics", label: "Analytics & Data", icon: "📊" },
-    { id: "contracts", label: "Contract Negotiations", icon: "📋" },
+  useEffect(() => {
+    if (id) {
+      loadDirectorData();
+    }
+  }, [id]);
+
+  const loadDirectorData = async () => {
+    setLoading(true);
+    try {
+      const saveData = await db.saves.get(id!);
+      if (!saveData) {
+        router.replace("/");
+        return;
+      }
+      setSave(saveData);
+
+      if (!saveData.clubId) {
+        router.replace(`/modes/club-selection?saveId=${id}`);
+        return;
+      }
+
+      const clubData = await db.clubs.get(saveData.clubId);
+      setClub(clubData);
+    } catch (error) {
+      console.error("Error loading director data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <Container safeArea style={styles.container}>
+        <ActivityIndicator size="large" color={colors.primary} style={styles.loader} />
+      </Container>
+    );
+  }
+
+  if (!club || !save) return null;
+
+  const dashboardItems = [
+    { title: "Recruitment", icon: "search", detail: "Scouting Active", route: "modes/scouting" },
+    { title: "Academy", icon: "school", detail: "3 High Potential", route: "modes/academy" },
+    { title: "Strategy", icon: "trending-up", detail: "Philosophy: Youth", route: "modes/philosophy" },
+    { title: "Facilities", icon: "stadium", detail: "Level 4 Training", route: "modes/facilities" },
   ];
 
   return (
-    <ScreenContainer className="p-0">
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View className="bg-primary px-6 py-6 gap-1" style={{ backgroundColor: colors.primary }}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <Text className="text-base text-background mb-2">← Back</Text>
-          </TouchableOpacity>
-          <Text className="text-3xl font-bold text-background">Sporting Director</Text>
-          <Text className="text-sm text-background opacity-90">Build Your Club</Text>
+    <Container safeArea style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.replace("/")} style={styles.backButton}>
+          <Ionicons name="home" size={24} color={colors.text} />
+        </TouchableOpacity>
+        <View style={styles.headerInfo}>
+          <Text style={styles.directorName}>{save.name}</Text>
+          <Text style={styles.titleText}>Sporting Director • {club.name}</Text>
+        </View>
+      </View>
+
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        <View style={styles.statsRow}>
+          <View style={styles.statBox}>
+            <Text style={styles.statLabel}>Budget</Text>
+            <Text style={styles.statValue}>£{(club.budget / 1000000).toFixed(1)}M</Text>
+          </View>
+          <View style={styles.statBox}>
+            <Text style={styles.statLabel}>Board Trust</Text>
+            <Text style={[styles.statValue, { color: colors.success }]}>85%</Text>
+          </View>
+          <View style={styles.statBox}>
+            <Text style={styles.statLabel}>Vision</Text>
+            <Text style={styles.statValue}>Elite</Text>
+          </View>
         </View>
 
-        <View className="px-4 py-6 gap-3">
-          {menuItems.map((item) => (
-            <TouchableOpacity
-              key={item.id}
+        <View style={styles.grid}>
+          {dashboardItems.map((item) => (
+            <TouchableOpacity 
+              key={item.title} 
+              style={styles.gridItem}
               onPress={() => {}}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.7 : 1,
-              })}
-              className="bg-surface rounded-xl p-4 border border-border flex-row items-center justify-between"
             >
-              <View className="flex-row items-center gap-3">
-                <Text className="text-2xl">{item.icon}</Text>
-                <Text className="text-base font-semibold text-foreground">{item.label}</Text>
+              <View style={styles.iconCircle}>
+                <Ionicons name={item.icon as any} size={24} color="#6366F1" />
               </View>
-              <Text className="text-muted">→</Text>
+              <Text style={styles.itemTitle}>{item.title}</Text>
+              <Text style={styles.itemDetail}>{item.detail}</Text>
             </TouchableOpacity>
           ))}
         </View>
 
-        <View className="px-4 py-4 gap-3">
-          <View className="bg-surface rounded-xl p-4 border border-border">
-            <Text className="text-sm font-semibold text-foreground mb-2">Squad Overview</Text>
-            <View className="gap-1">
-              <View className="flex-row justify-between">
-                <Text className="text-xs text-muted">Total Players</Text>
-                <Text className="text-xs font-semibold text-foreground">25</Text>
-              </View>
-              <View className="flex-row justify-between">
-                <Text className="text-xs text-muted">Average Age</Text>
-                <Text className="text-xs font-semibold text-foreground">26.3</Text>
-              </View>
-              <View className="flex-row justify-between">
-                <Text className="text-xs text-muted">Squad Value</Text>
-                <Text className="text-xs font-semibold text-foreground">$125M</Text>
-              </View>
+        <Card style={styles.recruitmentCard}>
+          <Card.Header>
+            <Text style={styles.sectionTitle}>Transfer Targets</Text>
+          </Card.Header>
+          <Card.Content>
+            <View style={styles.emptyList}>
+              <Text style={styles.emptyText}>Assign scouts to discover players matching your recruitment profile.</Text>
+              <Button variant="outline" size="sm" style={styles.actionButton}>Go to Scouting</Button>
             </View>
-          </View>
-        </View>
+          </Card.Content>
+        </Card>
+
+        <Card style={styles.facilitiesCard}>
+          <Card.Header>
+            <Text style={styles.sectionTitle}>Facilities Status</Text>
+          </Card.Header>
+          <Card.Content>
+            <View style={styles.facilityRow}>
+              <Ionicons name="fitness" size={20} color={colors.primary} />
+              <View style={styles.facilityInfo}>
+                <Text style={styles.facilityName}>Training Ground</Text>
+                <Text style={styles.facilityLevel}>Level 4 (Elite)</Text>
+              </View>
+              <Button variant="ghost" size="sm">Upgrade</Button>
+            </View>
+            <View style={[styles.facilityRow, { borderBottomWidth: 0 }]}>
+              <Ionicons name="medical" size={20} color={colors.error} />
+              <View style={styles.facilityInfo}>
+                <Text style={styles.facilityName}>Medical Center</Text>
+                <Text style={styles.facilityLevel}>Level 3 (Pro)</Text>
+              </View>
+              <Button variant="ghost" size="sm">Upgrade</Button>
+            </View>
+          </Card.Content>
+        </Card>
       </ScrollView>
-    </ScreenContainer>
+    </Container>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: spacing.lg,
+    backgroundColor: colors.backgroundSecondary,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  backButton: {
+    marginRight: spacing.md,
+  },
+  headerInfo: {
+    flex: 1,
+  },
+  directorName: {
+    ...typography.h2,
+    color: colors.text,
+  },
+  titleText: {
+    ...typography.caption,
+    color: colors.textSecondary,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    padding: spacing.md,
+    gap: spacing.md,
+  },
+  statBox: {
+    flex: 1,
+    backgroundColor: colors.backgroundSecondary,
+    padding: spacing.md,
+    borderRadius: borderRadius.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
+    alignItems: 'center',
+  },
+  statLabel: {
+    ...typography.tiny,
+    color: colors.textSecondary,
+    textTransform: 'uppercase',
+    marginBottom: 4,
+  },
+  statValue: {
+    ...typography.captionBold,
+    color: colors.text,
+  },
+  scrollContent: {
+    padding: spacing.md,
+  },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.md,
+    marginBottom: spacing.lg,
+  },
+  gridItem: {
+    width: '47.5%',
+    backgroundColor: colors.backgroundSecondary,
+    borderRadius: borderRadius.lg,
+    padding: spacing.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  iconCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: colors.backgroundTertiary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: spacing.sm,
+  },
+  itemTitle: {
+    ...typography.captionBold,
+    color: colors.text,
+  },
+  itemDetail: {
+    ...typography.tiny,
+    color: colors.textSecondary,
+    marginTop: 2,
+  },
+  recruitmentCard: {
+    marginBottom: spacing.lg,
+  },
+  facilitiesCard: {
+    marginBottom: spacing.xxl,
+  },
+  sectionTitle: {
+    ...typography.h4,
+    color: colors.text,
+  },
+  emptyList: {
+    padding: spacing.md,
+    alignItems: 'center',
+  },
+  emptyText: {
+    ...typography.caption,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginBottom: spacing.md,
+  },
+  actionButton: {
+    width: '100%',
+  },
+  facilityRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+    gap: spacing.md,
+  },
+  facilityInfo: {
+    flex: 1,
+  },
+  facilityName: {
+    ...typography.captionBold,
+    color: colors.text,
+  },
+  facilityLevel: {
+    ...typography.tiny,
+    color: colors.textSecondary,
+  },
+});

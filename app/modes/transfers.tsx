@@ -1,180 +1,206 @@
-import * as React from "react";
-import { ScrollView, Text, View, TouchableOpacity, TextInput, FlatList } from "react-native";
-import { ScreenContainer } from "@/components/screen-container";
-import { useRouter } from "expo-router";
-import { useColors } from "@/hooks/use-colors";
-import {
-  generateTransferMarket,
-  filterPlayersByPosition,
-  filterPlayersByBudget,
-  searchPlayers,
-  type TransferPlayer,
-} from "@/lib/transfer-market";
+import React, { useState, useEffect } from "react";
+import { ScrollView, Text, View, TouchableOpacity, ActivityIndicator, StyleSheet, FlatList } from "react-native";
+import { Container, Button, Card, Input } from "@/components/ui";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import { colors, spacing, typography, borderRadius, shadows } from "@/constants/design";
+import { db, Player } from "@/lib/db";
+import { Ionicons } from "@expo/vector-icons";
 
-export default function TransfersScreen() {
+export default function TransferMarketScreen() {
   const router = useRouter();
-  const colors = useColors();
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const [selectedPosition, setSelectedPosition] = React.useState<string | null>(null);
-  const [players] = React.useState(() => generateTransferMarket(50));
-  const [budget] = React.useState(35000000);
+  const { saveId } = useLocalSearchParams<{ saveId: string }>();
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  const positions = ["ST", "LW", "RW", "CAM", "CM", "CDM", "LB", "RB", "CB", "GK"];
+  useEffect(() => {
+    handleSearch();
+  }, []);
 
-  let filteredPlayers = players;
+  const handleSearch = async () => {
+    setLoading(true);
+    try {
+      const results = await db.players.search(searchQuery);
+      setPlayers(results);
+    } catch (error) {
+      console.error("Error searching players:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  if (searchQuery) {
-    filteredPlayers = searchPlayers(filteredPlayers, searchQuery);
-  }
-
-  if (selectedPosition) {
-    filteredPlayers = filterPlayersByPosition(filteredPlayers, selectedPosition);
-  }
-
-  filteredPlayers = filterPlayersByBudget(filteredPlayers, budget);
-
-  const renderPlayerCard = ({ item }: { item: TransferPlayer }) => (
-    <TouchableOpacity
-      style={({ pressed }) => ({
-        opacity: pressed ? 0.7 : 1,
-      })}
-      className="bg-surface rounded-lg p-4 border border-border mb-3"
-    >
-      <View className="flex-row justify-between items-start mb-2">
-        <View className="flex-1">
-          <Text className="text-base font-semibold text-foreground">{item.name}</Text>
-          <Text className="text-xs text-muted">{item.club}</Text>
+  const renderPlayer = ({ item }: { item: Player }) => (
+    <Card style={styles.playerCard}>
+      <Card.Content style={styles.cardContent}>
+        <View style={styles.playerMain}>
+          <View style={styles.ratingBadge}>
+            <Text style={styles.ratingText}>{item.rating}</Text>
+          </View>
+          <View style={styles.playerInfo}>
+            <Text style={styles.playerName}>{item.name}</Text>
+            <Text style={styles.metaText}>{item.position} • {item.age} years • {item.nationality}</Text>
+          </View>
+          <View style={styles.valueInfo}>
+            <Text style={styles.valueText}>£{(item.value / 1000000).toFixed(1)}M</Text>
+            <Text style={styles.wageText}>£{(item.wage / 1000).toFixed(0)}k p/w</Text>
+          </View>
         </View>
-        <View className="bg-primary px-2 py-1 rounded" style={{ backgroundColor: colors.primary }}>
-          <Text className="text-xs font-bold text-background">{item.position}</Text>
-        </View>
-      </View>
-
-      <View className="flex-row justify-between mb-2 gap-2">
-        <View className="flex-1">
-          <Text className="text-xs text-muted">Rating</Text>
-          <Text className="text-sm font-semibold text-foreground">{item.rating}/100</Text>
-        </View>
-        <View className="flex-1">
-          <Text className="text-xs text-muted">Age</Text>
-          <Text className="text-sm font-semibold text-foreground">{item.age}</Text>
-        </View>
-        <View className="flex-1">
-          <Text className="text-xs text-muted">Market Value</Text>
-          <Text className="text-sm font-semibold text-foreground">
-            ${(item.marketValue / 1000000).toFixed(1)}M
-          </Text>
-        </View>
-      </View>
-
-      <TouchableOpacity
-        style={({ pressed }) => ({
-          opacity: pressed ? 0.8 : 1,
-          backgroundColor: colors.primary,
-        })}
-        className="rounded py-2 items-center"
-      >
-        <Text className="text-sm font-semibold text-background">Make Offer</Text>
-      </TouchableOpacity>
-    </TouchableOpacity>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          style={styles.actionButton}
+          onPress={() => {}}
+        >
+          Approach to Sign
+        </Button>
+      </Card.Content>
+    </Card>
   );
 
   return (
-    <ScreenContainer className="p-0">
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View className="bg-primary px-6 py-6 gap-1" style={{ backgroundColor: colors.primary }}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <Text className="text-base text-background mb-2">← Back</Text>
-          </TouchableOpacity>
-          <Text className="text-3xl font-bold text-background">Transfer Market</Text>
-          <Text className="text-sm text-background opacity-90">
-            Budget: ${(budget / 1000000).toFixed(1)}M
-          </Text>
-        </View>
+    <Container safeArea style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
+        </TouchableOpacity>
+        <Text style={styles.title}>Transfer Market</Text>
+      </View>
 
-        <View className="px-4 py-4 gap-4">
-          {/* Search Bar */}
-          <TextInput
-            placeholder="Search players, clubs..."
-            placeholderTextColor={colors.muted}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            className="bg-surface border border-border rounded-lg px-4 py-3 text-foreground"
-            style={{ color: colors.foreground }}
-          />
+      <View style={styles.searchBar}>
+        <Input
+          placeholder="Search players by name..."
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          onSubmitEditing={handleSearch}
+          leftIcon={<Ionicons name="search" size={20} color={colors.textTertiary} />}
+          style={styles.searchInput}
+        />
+        <TouchableOpacity style={styles.filterButton}>
+          <Ionicons name="options-outline" size={24} color={colors.primary} />
+        </TouchableOpacity>
+      </View>
 
-          {/* Position Filter */}
-          <View className="gap-2">
-            <Text className="text-sm font-semibold text-foreground">Position</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              <View className="flex-row gap-2">
-                <TouchableOpacity
-                  onPress={() => setSelectedPosition(null)}
-                  style={({ pressed }) => ({
-                    opacity: pressed ? 0.7 : 1,
-                    backgroundColor:
-                      selectedPosition === null ? colors.primary : colors.surface,
-                  })}
-                  className="px-4 py-2 rounded-full border border-border"
-                >
-                  <Text
-                    className="text-sm font-semibold"
-                    style={{
-                      color:
-                        selectedPosition === null ? colors.background : colors.foreground,
-                    }}
-                  >
-                    All
-                  </Text>
-                </TouchableOpacity>
-
-                {positions.map((pos) => (
-                  <TouchableOpacity
-                    key={pos}
-                    onPress={() => setSelectedPosition(pos)}
-                    style={({ pressed }) => ({
-                      opacity: pressed ? 0.7 : 1,
-                      backgroundColor:
-                        selectedPosition === pos ? colors.primary : colors.surface,
-                    })}
-                    className="px-4 py-2 rounded-full border border-border"
-                  >
-                    <Text
-                      className="text-sm font-semibold"
-                      style={{
-                        color:
-                          selectedPosition === pos ? colors.background : colors.foreground,
-                      }}
-                    >
-                      {pos}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </ScrollView>
-          </View>
-
-          {/* Players List */}
-          <View className="gap-2">
-            <Text className="text-sm font-semibold text-foreground">
-              Available Players ({filteredPlayers.length})
-            </Text>
-
-            {filteredPlayers.length > 0 ? (
-              <FlatList
-                data={filteredPlayers}
-                renderItem={renderPlayerCard}
-                keyExtractor={(item) => item.id.toString()}
-                scrollEnabled={false}
-              />
-            ) : (
-              <View className="bg-surface rounded-lg p-6 items-center">
-                <Text className="text-sm text-muted">No players found matching your criteria</Text>
-              </View>
-            )}
-          </View>
-        </View>
-      </ScrollView>
-    </ScreenContainer>
+      {loading ? (
+        <ActivityIndicator size="large" color={colors.primary} style={styles.loader} />
+      ) : (
+        <FlatList
+          data={players}
+          renderItem={renderPlayer}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.listContent}
+          ListEmptyComponent={() => (
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyText}>No players found matching your search</Text>
+            </View>
+          )}
+        />
+      )}
+    </Container>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  backButton: {
+    marginRight: spacing.md,
+  },
+  title: {
+    ...typography.h3,
+    color: colors.text,
+  },
+  searchBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: spacing.md,
+    gap: spacing.sm,
+  },
+  searchInput: {
+    flex: 1,
+  },
+  filterButton: {
+    width: 44,
+    height: 44,
+    backgroundColor: colors.backgroundSecondary,
+    borderRadius: borderRadius.md,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  listContent: {
+    padding: spacing.md,
+  },
+  playerCard: {
+    marginBottom: spacing.sm,
+  },
+  cardContent: {
+    padding: spacing.sm,
+  },
+  playerMain: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: spacing.md,
+  },
+  ratingBadge: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: colors.backgroundTertiary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: spacing.md,
+  },
+  ratingText: {
+    ...typography.bodyBold,
+    color: colors.primary,
+  },
+  playerInfo: {
+    flex: 1,
+  },
+  playerName: {
+    ...typography.bodyBold,
+    color: colors.text,
+  },
+  metaText: {
+    ...typography.tiny,
+    color: colors.textSecondary,
+    marginTop: 2,
+  },
+  valueInfo: {
+    alignItems: 'flex-end',
+  },
+  valueText: {
+    ...typography.captionBold,
+    color: colors.accent,
+  },
+  wageText: {
+    ...typography.tiny,
+    color: colors.textTertiary,
+  },
+  actionButton: {
+    width: '100%',
+  },
+  emptyState: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: spacing.xxxl,
+  },
+  emptyText: {
+    ...typography.body,
+    color: colors.textSecondary,
+  },
+});

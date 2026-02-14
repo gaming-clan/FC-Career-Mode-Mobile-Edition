@@ -11,7 +11,10 @@ export default function ModesLayout() {
       <Stack.Screen name="player" />
       <Stack.Screen name="sporting_director" />
       <Stack.Screen name="create_a_club" />
+      <Stack.Screen name="club-selection" />
+      <Stack.Screen name="match-simulation" />
       <Stack.Screen name="squad-management" />
+      <Stack.Screen name="tactics" />
       <Stack.Screen name="fixtures" />
       <Stack.Screen name="standings" />
       <Stack.Screen name="financial" />

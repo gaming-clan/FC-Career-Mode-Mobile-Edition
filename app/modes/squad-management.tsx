@@ -1,107 +1,211 @@
-import * as React from "react";
-import { ScrollView, Text, View, TouchableOpacity } from "react-native";
-import { ScreenContainer } from "@/components/screen-container";
-import { useRouter } from "expo-router";
-import { useColors } from "@/hooks/use-colors";
-import { SquadCard } from "@/components/game-modes/squad-card";
+import React, { useState, useEffect } from "react";
+import { ScrollView, Text, View, TouchableOpacity, ActivityIndicator, StyleSheet, FlatList } from "react-native";
+import { Container, Button, Card, Avatar } from "@/components/ui";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import { colors, spacing, typography, borderRadius, shadows, iconSize } from "@/constants/design";
+import { db, Player, Club } from "@/lib/db";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function SquadManagementScreen() {
   const router = useRouter();
-  const colors = useColors();
-  const [selectedFormation, setSelectedFormation] = React.useState("4-3-3");
+  const { saveId } = useLocalSearchParams<{ saveId: string }>();
+  const [squad, setSquad] = useState<Player[]>([]);
+  const [club, setClub] = useState<Club | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const mockSquad = [
-    { id: 1, name: "David De Gea", position: "GK", rating: 89, age: 33 },
-    { id: 2, name: "Lisandro Martinez", position: "CB", rating: 85, age: 24 },
-    { id: 3, name: "Harry Maguire", position: "CB", rating: 82, age: 30 },
-    { id: 4, name: "Aaron Wan-Bissaka", position: "RB", rating: 80, age: 26 },
-    { id: 5, name: "Luke Shaw", position: "LB", rating: 81, age: 28 },
-    { id: 6, name: "Scott McTominay", position: "CM", rating: 81, age: 27 },
-    { id: 7, name: "Bruno Fernandes", position: "CM", rating: 91, age: 29 },
-    { id: 8, name: "Antony", position: "RW", rating: 82, age: 23 },
-    { id: 9, name: "Marcus Rashford", position: "LW", rating: 85, age: 26 },
-    { id: 10, name: "Cristiano Ronaldo", position: "ST", rating: 89, age: 38 },
-    { id: 11, name: "Jadon Sancho", position: "RW", rating: 80, age: 24 },
-  ];
+  useEffect(() => {
+    if (saveId) {
+      loadSquad();
+    }
+  }, [saveId]);
 
-  const formations = [
-    { id: "4-3-3", label: "4-3-3 (Balanced)" },
-    { id: "4-2-3-1", label: "4-2-3-1 (Defensive)" },
-    { id: "3-5-2", label: "3-5-2 (Attacking)" },
-    { id: "5-3-2", label: "5-3-2 (Very Defensive)" },
-  ];
+  const loadSquad = async () => {
+    setLoading(true);
+    try {
+      const save = await db.saves.get(saveId!);
+      if (save?.clubId) {
+        const clubData = await db.clubs.get(save.clubId);
+        setClub(clubData);
+        const players = await db.players.listByClub(save.clubId);
+        setSquad(players.sort((a, b) => b.rating - a.rating));
+      }
+    } catch (error) {
+      console.error("Error loading squad:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const renderPlayer = ({ item }: { item: Player }) => (
+    <Card style={styles.playerCard}>
+      <Card.Content style={styles.cardContent}>
+        <View style={styles.playerMain}>
+          <View style={styles.ratingBadge}>
+            <Text style={styles.ratingText}>{item.rating}</Text>
+          </View>
+          <View style={styles.playerInfo}>
+            <Text style={styles.playerName}>{item.name}</Text>
+            <View style={styles.playerMeta}>
+              <Text style={styles.metaText}>{item.position}</Text>
+              <Text style={styles.bullet}>•</Text>
+              <Text style={styles.metaText}>{item.age} years</Text>
+              <Text style={styles.bullet}>•</Text>
+              <Text style={styles.metaText}>{item.nationality}</Text>
+            </View>
+          </View>
+        </View>
+        <View style={styles.playerStats}>
+          <View style={styles.statMini}>
+            <Text style={styles.statLabel}>PAC</Text>
+            <Text style={styles.statValue}>{item.pace}</Text>
+          </View>
+          <View style={styles.statMini}>
+            <Text style={styles.statLabel}>SHO</Text>
+            <Text style={styles.statValue}>{item.shooting}</Text>
+          </View>
+          <View style={styles.statMini}>
+            <Text style={styles.statLabel}>PAS</Text>
+            <Text style={styles.statValue}>{item.passing}</Text>
+          </View>
+          <View style={styles.statMini}>
+            <Text style={styles.statLabel}>DRI</Text>
+            <Text style={styles.statValue}>{item.dribbling}</Text>
+          </View>
+          <View style={styles.statMini}>
+            <Text style={styles.statLabel}>DEF</Text>
+            <Text style={styles.statValue}>{item.defending}</Text>
+          </View>
+          <View style={styles.statMini}>
+            <Text style={styles.statLabel}>PHY</Text>
+            <Text style={styles.statValue}>{item.physical}</Text>
+          </View>
+        </View>
+      </Card.Content>
+    </Card>
+  );
 
   return (
-    <ScreenContainer className="p-0">
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View className="bg-primary px-6 py-6 gap-1" style={{ backgroundColor: colors.primary }}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <Text className="text-base text-background mb-2">← Back</Text>
-          </TouchableOpacity>
-          <Text className="text-3xl font-bold text-background">Squad Management</Text>
-          <Text className="text-sm text-background opacity-90">Set your formation and lineup</Text>
-        </View>
+    <Container safeArea style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
+        </TouchableOpacity>
+        <Text style={styles.title}>Squad Management</Text>
+      </View>
 
-        <View className="px-4 py-6">
-          <Text className="text-lg font-semibold text-foreground mb-3">Formation</Text>
-          <View className="gap-2">
-            {formations.map((formation) => (
-              <TouchableOpacity
-                key={formation.id}
-                onPress={() => setSelectedFormation(formation.id)}
-                style={({ pressed }) => ({
-                  opacity: pressed ? 0.7 : 1,
-                })}
-                className="p-3 rounded-lg border"
-                style={{
-                  backgroundColor:
-                    selectedFormation === formation.id ? colors.primary : colors.surface,
-                  borderColor: selectedFormation === formation.id ? colors.primary : colors.border,
-                  borderWidth: 1,
-                }}
-              >
-                <Text
-                  className="font-semibold"
-                  style={{
-                    color:
-                      selectedFormation === formation.id ? colors.background : colors.foreground,
-                  }}
-                >
-                  {formation.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
-
-        <View className="px-4 py-6">
-          <Text className="text-lg font-semibold text-foreground mb-3">Squad ({mockSquad.length})</Text>
-          <View className="gap-2">
-            {mockSquad.map((player) => (
-              <SquadCard
-                key={player.id}
-                playerName={player.name}
-                position={player.position}
-                rating={player.rating}
-                age={player.age}
-                onPress={() => {}}
-              />
-            ))}
-          </View>
-        </View>
-
-        <View className="px-4 py-4 gap-3">
-          <TouchableOpacity
-            style={({ pressed }) => ({
-              opacity: pressed ? 0.8 : 1,
-              backgroundColor: colors.primary,
-            })}
-            className="rounded-lg py-3 items-center"
-          >
-            <Text className="text-base font-semibold text-background">Save Formation</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </ScreenContainer>
+      {loading ? (
+        <ActivityIndicator size="large" color={colors.primary} style={styles.loader} />
+      ) : (
+        <FlatList
+          data={squad}
+          renderItem={renderPlayer}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.listContent}
+          ListHeaderComponent={() => (
+            <View style={styles.listHeader}>
+              <Text style={styles.squadCount}>{squad.length} Players in Senior Squad</Text>
+            </View>
+          )}
+        />
+      )}
+    </Container>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  backButton: {
+    marginRight: spacing.md,
+  },
+  title: {
+    ...typography.h3,
+    color: colors.text,
+  },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  listContent: {
+    padding: spacing.md,
+  },
+  listHeader: {
+    marginBottom: spacing.md,
+  },
+  squadCount: {
+    ...typography.caption,
+    color: colors.textSecondary,
+  },
+  playerCard: {
+    marginBottom: spacing.sm,
+  },
+  cardContent: {
+    padding: spacing.sm,
+  },
+  playerMain: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: spacing.sm,
+  },
+  ratingBadge: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: spacing.md,
+  },
+  ratingText: {
+    ...typography.bodyBold,
+    color: colors.white,
+  },
+  playerInfo: {
+    flex: 1,
+  },
+  playerName: {
+    ...typography.bodyBold,
+    color: colors.text,
+  },
+  playerMeta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  metaText: {
+    ...typography.tiny,
+    color: colors.textSecondary,
+  },
+  bullet: {
+    marginHorizontal: 4,
+    color: colors.textTertiary,
+  },
+  playerStats: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: colors.backgroundTertiary,
+    padding: spacing.xs,
+    borderRadius: borderRadius.sm,
+  },
+  statMini: {
+    alignItems: 'center',
+  },
+  statLabel: {
+    fontSize: 8,
+    fontWeight: 'bold',
+    color: colors.textTertiary,
+  },
+  statValue: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: colors.text,
+  },
+});

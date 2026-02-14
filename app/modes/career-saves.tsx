@@ -1,162 +1,234 @@
-import * as React from "react";
-import { ScrollView, Text, View, TouchableOpacity, FlatList, Alert } from "react-native";
-import { ScreenContainer } from "@/components/screen-container";
-import { useRouter } from "expo-router";
-import { useColors } from "@/hooks/use-colors";
-import { getAllSaves, deleteSave, duplicateSave, type CareerSave } from "@/lib/career-storage";
+import React, { useState, useEffect } from "react";
+import { ScrollView, Text, View, TouchableOpacity, Alert, ActivityIndicator, StyleSheet } from "react-native";
+import { Container, Button, Card, Input } from "@/components/ui";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import { colors, spacing, typography, borderRadius, shadows } from "@/constants/design";
+import { db, Save } from "@/lib/db";
+import { Ionicons } from "@expo/vector-icons";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function CareerSavesScreen() {
   const router = useRouter();
-  const colors = useColors();
-  const [saves, setSaves] = React.useState<CareerSave[]>([]);
-  const [loading, setLoading] = React.useState(true);
+  const { mode } = useLocalSearchParams<{ mode: Save["mode"] }>();
+  const { user } = useAuth();
+  const [saves, setSaves] = useState<Save[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(false);
+  const [newSaveName, setNewSaveName] = useState("");
 
-  React.useEffect(() => {
+  useEffect(() => {
     loadSaves();
-  }, []);
+  }, [user]);
 
   const loadSaves = async () => {
+    if (!user) return;
     setLoading(true);
-    const allSaves = await getAllSaves();
-    setSaves(allSaves.sort((a, b) => new Date(b.lastPlayedAt).getTime() - new Date(a.lastPlayedAt).getTime()));
-    setLoading(false);
+    try {
+      const allSaves = await db.saves.list(user.id);
+      // If mode is specified, filter by mode. Otherwise show all.
+      const filteredSaves = mode ? allSaves.filter((s) => s.mode === mode) : allSaves;
+      setSaves(filteredSaves);
+    } catch (error) {
+      console.error("Error loading saves:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleDelete = (id: string, name: string) => {
-    Alert.alert("Delete Save", `Are you sure you want to delete "${name}"?`, [
-      { text: "Cancel", onPress: () => {} },
-      {
-        text: "Delete",
-        onPress: async () => {
-          await deleteSave(id);
-          await loadSaves();
-        },
-        style: "destructive",
-      },
-    ]);
+  const handleCreateSave = async () => {
+    if (!user || !newSaveName.trim()) return;
+    
+    setCreating(true);
+    try {
+      const newSave = await db.saves.create({
+        userId: user.id,
+        name: newSaveName,
+        mode: mode || "manager",
+        seasonYear: 2025,
+        currentWeek: 1,
+      });
+      
+      router.push(`/modes/${newSave.mode}?id=${newSave.id}` as any);
+    } catch (error) {
+      Alert.alert("Error", "Failed to create save game");
+    } finally {
+      setCreating(false);
+    }
   };
 
-  const handleDuplicate = async (id: string) => {
-    await duplicateSave(id);
-    await loadSaves();
+  const handleDeleteSave = async (id: string) => {
+    Alert.alert(
+      "Delete Save",
+      "Are you sure you want to delete this career? This cannot be undone.",
+      [
+        { text: "Cancel", style: "cancel" },
+        { 
+          text: "Delete", 
+          style: "destructive",
+          onPress: async () => {
+            await db.saves.delete(id);
+            loadSaves();
+          }
+        }
+      ]
+    );
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString() + " " + date.toLocaleTimeString();
-  };
-
-  const renderSaveCard = ({ item }: { item: CareerSave }) => (
-    <View className="bg-surface rounded-lg p-4 border border-border mb-3">
-      <View className="flex-row justify-between items-start mb-2">
-        <View className="flex-1">
-          <Text className="text-base font-semibold text-foreground">{item.name}</Text>
-          <Text className="text-xs text-muted">{item.clubName}</Text>
+  if (!user) {
+    return (
+      <Container safeArea style={styles.container}>
+        <View style={styles.center}>
+          <Text style={styles.message}>Please sign in to manage your careers</Text>
+          <Button variant="primary" onPress={() => router.replace("/")}>Back to Menu</Button>
         </View>
-        <View className="bg-primary px-2 py-1 rounded" style={{ backgroundColor: colors.primary }}>
-          <Text className="text-xs font-bold text-background capitalize">{item.mode}</Text>
-        </View>
-      </View>
-
-      <View className="flex-row justify-between mb-3 gap-2">
-        <View className="flex-1">
-          <Text className="text-xs text-muted">Season</Text>
-          <Text className="text-sm font-semibold text-foreground">{item.seasonYear}</Text>
-        </View>
-        <View className="flex-1">
-          <Text className="text-xs text-muted">Week</Text>
-          <Text className="text-sm font-semibold text-foreground">{item.currentWeek}/38</Text>
-        </View>
-        <View className="flex-1">
-          <Text className="text-xs text-muted">Last Played</Text>
-          <Text className="text-xs font-semibold text-foreground">{formatDate(item.lastPlayedAt).split(" ")[0]}</Text>
-        </View>
-      </View>
-
-      <View className="flex-row gap-2">
-        <TouchableOpacity
-          onPress={() => {}}
-          style={({ pressed }) => ({
-            opacity: pressed ? 0.7 : 1,
-            backgroundColor: colors.primary,
-            flex: 1,
-          })}
-          className="rounded py-2 items-center"
-        >
-          <Text className="text-sm font-semibold text-background">Load</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => handleDuplicate(item.id)}
-          style={({ pressed }) => ({
-            opacity: pressed ? 0.7 : 1,
-            backgroundColor: colors.surface,
-            borderColor: colors.border,
-          })}
-          className="rounded py-2 items-center border px-3"
-        >
-          <Text className="text-sm font-semibold text-foreground">Copy</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => handleDelete(item.id, item.name)}
-          style={({ pressed }) => ({
-            opacity: pressed ? 0.7 : 1,
-            backgroundColor: colors.error,
-          })}
-          className="rounded py-2 items-center px-3"
-        >
-          <Text className="text-sm font-semibold text-background">Delete</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
+      </Container>
+    );
+  }
 
   return (
-    <ScreenContainer className="p-0">
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-        <View className="bg-primary px-6 py-6 gap-1" style={{ backgroundColor: colors.primary }}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <Text className="text-base text-background mb-2">← Back</Text>
-          </TouchableOpacity>
-          <Text className="text-3xl font-bold text-background">Career Saves</Text>
-          <Text className="text-sm text-background opacity-90">Manage your game saves</Text>
-        </View>
+    <Container safeArea style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
+        </TouchableOpacity>
+        <Text style={styles.title}>
+          {mode ? `${mode.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')} Saves` : 'All Careers'}
+        </Text>
+      </View>
 
-        <View className="px-4 py-6">
-          {loading ? (
-            <View className="items-center py-8">
-              <Text className="text-muted">Loading saves...</Text>
-            </View>
-          ) : saves.length > 0 ? (
-            <View>
-              <Text className="text-sm font-semibold text-foreground mb-3">
-                {saves.length} Save{saves.length !== 1 ? "s" : ""}
-              </Text>
-              <FlatList
-                data={saves}
-                renderItem={renderSaveCard}
-                keyExtractor={(item) => item.id}
-                scrollEnabled={false}
-              />
-            </View>
-          ) : (
-            <View className="bg-surface rounded-lg p-6 items-center border border-border">
-              <Text className="text-muted mb-3">No career saves yet</Text>
-              <TouchableOpacity
-                onPress={() => router.back()}
-                style={({ pressed }) => ({
-                  opacity: pressed ? 0.8 : 1,
-                  backgroundColor: colors.primary,
-                })}
-                className="rounded-lg px-6 py-2"
-              >
-                <Text className="text-sm font-semibold text-background">Start New Career</Text>
-              </TouchableOpacity>
-            </View>
-          )}
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        {loading ? (
+          <ActivityIndicator size="large" color={colors.primary} style={styles.loader} />
+        ) : (
+          <View style={styles.savesList}>
+            {saves.length === 0 ? (
+              <View style={styles.emptyState}>
+                <Ionicons name="football-outline" size={64} color={colors.textTertiary} />
+                <Text style={styles.emptyText}>No saved careers found</Text>
+              </View>
+            ) : (
+              saves.map((save) => (
+                <Card key={save.id} style={styles.saveCard} onPress={() => router.push(`/modes/${save.mode}?id=${save.id}` as any)}>
+                  <Card.Content>
+                    <View style={styles.saveHeader}>
+                      <View>
+                        <Text style={styles.saveName}>{save.name}</Text>
+                        <Text style={styles.saveDetails}>
+                          {save.clubId ? 'Managing Club' : 'No Club Selected'} • Season {save.seasonYear}
+                        </Text>
+                      </View>
+                      <TouchableOpacity onPress={() => handleDeleteSave(save.id)}>
+                        <Ionicons name="trash-outline" size={20} color={colors.error} />
+                      </TouchableOpacity>
+                    </View>
+                  </Card.Content>
+                </Card>
+              ))
+            )}
+          </View>
+        )}
+
+        <View style={styles.createSection}>
+          <Text style={styles.sectionTitle}>Start New Career</Text>
+          <Input
+            placeholder="Career Name (e.g. My Road to Glory)"
+            value={newSaveName}
+            onChangeText={setNewSaveName}
+            style={styles.input}
+          />
+          <Button 
+            variant="primary" 
+            onPress={handleCreateSave} 
+            loading={creating}
+            disabled={!newSaveName.trim()}
+          >
+            Create New {mode ? mode.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : 'Career'}
+          </Button>
         </View>
       </ScrollView>
-    </ScreenContainer>
+    </Container>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  backButton: {
+    marginRight: spacing.md,
+  },
+  title: {
+    ...typography.h3,
+    color: colors.text,
+  },
+  scrollContent: {
+    padding: spacing.md,
+  },
+  loader: {
+    marginTop: spacing.xxl,
+  },
+  savesList: {
+    marginBottom: spacing.xxl,
+  },
+  saveCard: {
+    marginBottom: spacing.md,
+  },
+  saveHeader: {
+    flexDirection: 'row',
+    justifyContent: 'between',
+    alignItems: 'center',
+  },
+  saveName: {
+    ...typography.h4,
+    color: colors.text,
+  },
+  saveDetails: {
+    ...typography.caption,
+    color: colors.textSecondary,
+  },
+  emptyState: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: spacing.xxxl,
+  },
+  emptyText: {
+    ...typography.body,
+    color: colors.textSecondary,
+    marginTop: spacing.md,
+  },
+  createSection: {
+    backgroundColor: colors.backgroundSecondary,
+    padding: spacing.lg,
+    borderRadius: borderRadius.lg,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  sectionTitle: {
+    ...typography.h4,
+    color: colors.text,
+    marginBottom: spacing.md,
+  },
+  input: {
+    marginBottom: spacing.md,
+  },
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: spacing.xl,
+  },
+  message: {
+    ...typography.body,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginBottom: spacing.lg,
+  },
+});
