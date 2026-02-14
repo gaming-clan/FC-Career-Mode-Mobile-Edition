@@ -47,10 +47,17 @@ function toFormData(
   contentType: string,
   fileName: string,
 ): FormData {
-  const blob =
-    typeof data === "string"
-      ? new Blob([data], { type: contentType })
-      : new Blob([data as any], { type: contentType });
+  let blob: Blob;
+
+  if (typeof data === "string") {
+    blob = new Blob([data], { type: contentType });
+  } else if (data instanceof Uint8Array) {
+    blob = new Blob([data], { type: contentType });
+  } else {
+    // Buffer is a subclass of Uint8Array
+    blob = new Blob([new Uint8Array(data)], { type: contentType });
+  }
+
   const form = new FormData();
   form.append("file", blob, fileName || "file");
   return form;
@@ -60,6 +67,15 @@ function buildAuthHeaders(apiKey: string): HeadersInit {
   return { Authorization: `Bearer ${apiKey}` };
 }
 
+/**
+ * Upload data to storage service.
+ *
+ * @param relKey - Relative storage key/path
+ * @param data - Data to upload (string, Buffer, or Uint8Array)
+ * @param contentType - MIME type (default: application/octet-stream)
+ * @returns Object with storage key and download URL
+ * @throws Error if storage credentials are missing or upload fails
+ */
 export async function storagePut(
   relKey: string,
   data: Buffer | Uint8Array | string,
@@ -85,6 +101,13 @@ export async function storagePut(
   return { key, url };
 }
 
+/**
+ * Get download URL for stored file.
+ *
+ * @param relKey - Relative storage key/path
+ * @returns Object with storage key and download URL
+ * @throws Error if storage credentials are missing or request fails
+ */
 export async function storageGet(relKey: string): Promise<{ key: string; url: string }> {
   const { baseUrl, apiKey } = getStorageConfig();
   const key = normalizeKey(relKey);

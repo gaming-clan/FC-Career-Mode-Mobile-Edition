@@ -21,7 +21,6 @@ export async function getAllSaves(): Promise<CareerSave[]> {
     const data = await AsyncStorage.getItem(STORAGE_KEY);
     return data ? JSON.parse(data) : [];
   } catch (error) {
-    console.error("Error loading saves:", error);
     return [];
   }
 }
@@ -31,7 +30,6 @@ export async function getSaveById(id: string): Promise<CareerSave | null> {
     const saves = await getAllSaves();
     return saves.find((s) => s.id === id) || null;
   } catch (error) {
-    console.error("Error getting save:", error);
     return null;
   }
 }
@@ -51,7 +49,6 @@ export async function createSave(save: Omit<CareerSave, "id" | "createdAt" | "la
 
     return newSave;
   } catch (error) {
-    console.error("Error creating save:", error);
     throw error;
   }
 }
@@ -72,7 +69,6 @@ export async function updateSave(id: string, updates: Partial<CareerSave>): Prom
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(saves));
     return saves[index];
   } catch (error) {
-    console.error("Error updating save:", error);
     return null;
   }
 }
@@ -84,7 +80,6 @@ export async function deleteSave(id: string): Promise<boolean> {
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
     return true;
   } catch (error) {
-    console.error("Error deleting save:", error);
     return false;
   }
 }
@@ -108,7 +103,6 @@ export async function duplicateSave(id: string): Promise<CareerSave | null> {
 
     return newSave;
   } catch (error) {
-    console.error("Error duplicating save:", error);
     return null;
   }
 }
@@ -118,7 +112,6 @@ export async function exportSave(id: string): Promise<string | null> {
     const save = await getSaveById(id);
     return save ? JSON.stringify(save, null, 2) : null;
   } catch (error) {
-    console.error("Error exporting save:", error);
     return null;
   }
 }
@@ -128,7 +121,6 @@ export async function importSave(jsonData: string): Promise<CareerSave | null> {
     const save = JSON.parse(jsonData) as Omit<CareerSave, "id" | "createdAt" | "lastPlayedAt">;
     return createSave(save);
   } catch (error) {
-    console.error("Error importing save:", error);
     return null;
   }
 }

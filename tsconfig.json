@@ -1,11 +1,19 @@
 {
-  "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "types": [
-      "node",
-      "nativewind/types"
-    ],
+    "target": "es2020",
+    "lib": ["es2020", "dom", "dom.iterable"],
+    "jsx": "react-jsx",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": [],
+    "typeRoots": ["./node_modules/@types"],
+    "noEmit": true,
     "paths": {
       "@/*": [
         "./*"
@@ -20,10 +28,13 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "nativewind-env.d.ts"
+    "nativewind-env.d.ts",
+    "types.global.d.ts"
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "scripts",
+    "lib/_core/logger.ts"
   ]
 }

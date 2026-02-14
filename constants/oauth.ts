@@ -52,14 +52,17 @@ export function getApiBaseUrl(): string {
 export const SESSION_TOKEN_KEY = "app_session_token";
 export const USER_INFO_KEY = "manus-runtime-user-info";
 
-const encodeState = (value: string) => {
+const encodeState = (value: string): string => {
+  // Try to use native btoa (browser environment)
   if (typeof globalThis.btoa === "function") {
     return globalThis.btoa(value);
   }
-  const BufferImpl = (globalThis as Record<string, any>).Buffer;
+  // Fallback to Buffer for Node.js environment
+  const BufferImpl = (globalThis as Record<string, unknown>).Buffer as typeof Buffer | undefined;
   if (BufferImpl) {
     return BufferImpl.from(value, "utf-8").toString("base64");
   }
+  // Fallback: return unencoded if no encoding available
   return value;
 };
 
@@ -94,38 +97,36 @@ export const getLoginUrl = () => {
 /**
  * Start OAuth login flow.
  *
- * On native platforms (iOS/Android), open the system browser directly so
- * the OAuth callback returns via deep link to the app.
+ * On native platforms (iOS/Android), opens the system browser to initiate OAuth.
+ * The callback returns via deep link to the app at the callback route.
  *
- * On web, this simply redirects to the login URL.
+ * On web, redirects to the login URL directly.
  *
- * @returns Always null, the callback is handled via deep link.
+ * @throws Error if unable to open login URL on native platforms
+ * @returns Promise that resolves when oauth flow is initiated
  */
-export async function startOAuthLogin(): Promise<string | null> {
+export async function startOAuthLogin(): Promise<void> {
   const loginUrl = getLoginUrl();
 
   if (ReactNative.Platform.OS === "web") {
-    // On web, just redirect
+    // On web, perform redirect
     if (typeof window !== "undefined") {
       window.location.href = loginUrl;
     }
-    return null;
+    return;
   }
 
-  const supported = await Linking.canOpenURL(loginUrl);
-  if (!supported) {
-    console.warn("[OAuth] Cannot open login URL: URL scheme not supported");
-    // 可考虑抛出错误或返回错误状态，让调用方处理
-    return null;
+  // Check if device can handle the login URL
+  const isSupported = await Linking.canOpenURL(loginUrl);
+  if (!isSupported) {
+    throw new Error("OAuth login URL scheme is not supported on this device");
   }
 
+  // Open the login URL in system browser
   try {
     await Linking.openURL(loginUrl);
   } catch (error) {
-    console.error("[OAuth] Failed to open login URL:", error);
-    // 可考虑抛出错误让调用方处理
+    const message = error instanceof Error ? error.message : "Unknown error";
+    throw new Error(`Failed to open OAuth login URL: ${message}`);
   }
-
-  // The OAuth callback will reopen the app via deep link.
-  return null;
 }

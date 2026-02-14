@@ -1,40 +1,17 @@
-import { ScrollView, Text, View, TouchableOpacity, StyleSheet, PressableProps } from "react-native";
+import { ScrollView, Text, View, TouchableOpacity } from "react-native";
 import { ScreenContainer } from "@/components/screen-container";
 import { useRouter } from "expo-router";
 import { useColors } from "@/hooks/use-colors";
+import { getAllGameModes } from "@/constants/game-modes";
 
 export default function HomeScreen() {
   const router = useRouter();
   const colors = useColors();
 
-  const gameModes = [
-    {
-      id: "manager",
-      title: "Manager Career",
-      description: "Lead a club to glory. Handle transfers, tactics, and finances.",
-    },
-    {
-      id: "player",
-      title: "Player Career",
-      description: "Rise from prospect to legend. Train, perform, and earn glory.",
-    },
-    {
-      id: "sporting_director",
-      title: "Sporting Director",
-      description: "Build a winning club. Scout, negotiate, and plan strategy.",
-    },
-    {
-      id: "create_a_club",
-      title: "Create-a-Club",
-      description: "Start from scratch. Build your club identity and rise.",
-    },
-  ];
+  const gameModes = getAllGameModes();
 
-  const handleModePress = (modeId: string) => {
-    if (modeId === "manager") router.push("/modes/manager");
-    else if (modeId === "player") router.push("/modes/player");
-    else if (modeId === "sporting_director") router.push("/modes/sporting_director");
-    else if (modeId === "create_a_club") router.push("/modes/create_a_club");
+  const handleModePress = (route: string) => {
+    router.push(route);
   };
 
   return (

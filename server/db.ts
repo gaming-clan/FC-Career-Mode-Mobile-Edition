@@ -5,7 +5,14 @@ import { ENV } from "./_core/env";
 
 let _db: ReturnType<typeof drizzle> | null = null;
 
-// Lazily create the drizzle instance so local tooling can run without a DB.
+/**
+ * Get or create the Drizzle database instance.
+ *
+ * Lazily creates the instance so local tooling can run without a database.
+ * If DATABASE_URL is not set, returns null (database not available).
+ *
+ * @returns Drizzle database instance or null if not connected
+ */
 export async function getDb() {
   if (!_db && process.env.DATABASE_URL) {
     try {
@@ -18,6 +25,15 @@ export async function getDb() {
   return _db;
 }
 
+/**
+ * Insert or update a user in the database.
+ *
+ * Creates a new user or updates existing one by openId.
+ * Admin role is automatically assigned if user's openId matches ENV.ownerOpenId.
+ *
+ * @param user - User data to insert/update
+ * @throws Error if openId is missing or database operation fails
+ */
 export async function upsertUser(user: InsertUser): Promise<void> {
   if (!user.openId) {
     throw new Error("User openId is required for upsert");
@@ -77,7 +93,18 @@ export async function upsertUser(user: InsertUser): Promise<void> {
   }
 }
 
+/**
+ * Get a user by their OAuth ID.
+ *
+ * @param openId - OAuth open ID
+ * @returns User object or undefined if not found
+ * @throws Error if database is not available
+ */
 export async function getUserByOpenId(openId: string) {
+  if (!openId || typeof openId !== "string") {
+    throw new Error("Invalid openId provided");
+  }
+
   const db = await getDb();
   if (!db) {
     console.warn("[Database] Cannot get user: database not available");
