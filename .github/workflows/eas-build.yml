@@ -28,19 +28,10 @@ jobs:
       - name: Install EAS CLI
         run: npm install -g eas-cli
 
-      - name: Login to Expo using TEST_ROBOT secret
-        env:
-          EXPO_TOKEN: ${{ secrets.TEST_ROBOT }}
-        run: |
-          if [ -z "$EXPO_TOKEN" ]; then
-            echo "TEST_ROBOT secret is not set in repository secrets" >&2
-            exit 1
-          fi
-          eas login --token "$EXPO_TOKEN"
-
       - name: Run EAS build (Android APK)
         env:
           EXPO_TOKEN: ${{ secrets.TEST_ROBOT }}
         run: |
+          # EXPO_TOKEN is provided as an environment variable; eas build will use it.
           # Use non-interactive mode and the production profile defined in eas.json.
           eas build -p android --profile production --non-interactive
