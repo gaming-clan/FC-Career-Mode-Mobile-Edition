@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
-      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN || secrets.TEST_ROBOT }}
+      EXPO_TOKEN: ${{ secrets.TEST_ROBOT }}
 
     steps:
       - name: Checkout repository
@@ -20,7 +20,7 @@ jobs:
       - name: Validate Expo token is configured
         run: |
           if [ -z "${EXPO_TOKEN}" ]; then
-            echo "Missing Expo token. Configure repository secret EXPO_TOKEN (preferred) or TEST_ROBOT." >&2
+            echo "Missing Expo Robot token. Configure repository secret TEST_ROBOT." >&2
             exit 1
           fi
 
@@ -47,6 +47,9 @@ jobs:
 
       - name: Validate Expo config
         run: pnpm exec expo config --type public >/dev/null
+
+      - name: Verify Expo Robot authentication
+        run: eas whoami
 
       - name: Build Android APK (wait for remote result)
         run: eas build --platform android --profile production --non-interactive --wait
