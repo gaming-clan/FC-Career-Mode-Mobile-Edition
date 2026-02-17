@@ -37,8 +37,8 @@ jobs:
           EXPO_TOKEN: ${{ secrets.TEST_ROBOT }}
         run: |
           set -e
-          echo "Running eas init --non-interactive --yes"
-          eas init --non-interactive --yes || true
+          echo "Running eas init --non-interactive"
+          eas init --non-interactive || true
 
       - name: Run EAS build (tiny comment added)
         # tiny change: added this one-line comment to test CI re-run
