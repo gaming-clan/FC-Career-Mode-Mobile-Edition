@@ -3,34 +3,50 @@ name: EAS Android Build
 on:
   workflow_dispatch: {}
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
-    name: EAS Build (Android APK)
+    name: Build Android APK with EAS
     runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN || secrets.TEST_ROBOT }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Validate Expo token is configured
+        run: |
+          if [ -z "${EXPO_TOKEN}" ]; then
+            echo "Missing Expo token. Configure repository secret EXPO_TOKEN (preferred) or TEST_ROBOT." >&2
+            exit 1
+          fi
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
+          cache: pnpm
 
-      - name: Install pnpm
-        run: npm install -g pnpm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Install EAS CLI
-        run: npm install -g eas-cli
+      - name: Setup Expo and EAS CLI
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          expo-version: latest
+          token: ${{ env.EXPO_TOKEN }}
 
-      - name: Run EAS build (Android APK)
-        env:
-          EXPO_TOKEN: ${{ secrets.TEST_ROBOT }}
-        run: |
-          # Provide EXPO_TOKEN from repository secret; do not call `eas login`.
-          eas build -p android --profile production --non-interactive
+      - name: Validate Expo config
+        run: pnpm exec expo config --type public >/dev/null
+
+      - name: Build Android APK (wait for remote result)
+        run: eas build --platform android --profile production --non-interactive --wait
