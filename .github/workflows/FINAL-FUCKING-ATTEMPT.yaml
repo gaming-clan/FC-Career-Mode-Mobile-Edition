@@ -26,6 +26,20 @@ jobs:
       - name: Install EAS CLI
         run: npm install -g eas-cli
 
+      - name: Ensure EAS auth
+        env:
+          EXPO_TOKEN: ${{ secrets.TEST_ROBOT }}
+        run: |
+          echo "EAS whoami:" && eas whoami || true
+
+      - name: Init EAS project (non-interactive)
+        env:
+          EXPO_TOKEN: ${{ secrets.TEST_ROBOT }}
+        run: |
+          set -e
+          echo "Running eas init --non-interactive --yes"
+          eas init --non-interactive --yes || true
+
       - name: Run EAS build (tiny comment added)
         # tiny change: added this one-line comment to test CI re-run
         env:
