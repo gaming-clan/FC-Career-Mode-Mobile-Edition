@@ -38,7 +38,7 @@ jobs:
         run: |
           set -e
           echo "Running eas init --non-interactive"
-          eas init --non-interactive || true
+          eas init --non-interactive --force || true
 
       - name: Run EAS build (tiny comment added)
         # tiny change: added this one-line comment to test CI re-run
