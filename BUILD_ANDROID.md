@@ -40,6 +40,8 @@ Notes:
 - EAS Build runs in Expo servers and handles signing for you (you can also provide keystore).
 - This repository workflow is wired to the Expo Robot token in the `TEST_ROBOT` repository secret (set in GitHub → Settings → Secrets → Actions).
 
+To verify robot auth in CI logs, run the `EAS Android Build` workflow and check the `Verify Expo Robot authentication` step output.
+
 Option B — Run on a connected Android device (debug/run)
 Requires Android SDK + ADB and a connected device or emulator.
 
