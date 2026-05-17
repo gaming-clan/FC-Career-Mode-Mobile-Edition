@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Player Career - Football Manager</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@600;700&amp;family=Inter:wght@400;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#122033",
+                        "outline": "#909097",
+                        "on-tertiary-fixed": "#001e2c",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed": "#c4e7ff",
+                        "surface-container-low": "#0d1c2f",
+                        "on-tertiary-container": "#008abb",
+                        "surface-dim": "#051426",
+                        "surface-tint": "#bec6e0",
+                        "secondary-fixed-dim": "#a4d64c",
+                        "inverse-on-surface": "#233144",
+                        "on-secondary-fixed-variant": "#354e00",
+                        "surface-variant": "#273649",
+                        "outline-variant": "#45464d",
+                        "inverse-surface": "#d5e3fd",
+                        "on-surface-variant": "#c6c6cd",
+                        "primary": "#bec6e0",
+                        "surface-container-highest": "#273649",
+                        "secondary-container": "#719e13",
+                        "surface-container-lowest": "#010f21",
+                        "primary-fixed": "#dae2fd",
+                        "on-error": "#690005",
+                        "surface-container-high": "#1c2b3e",
+                        "tertiary-fixed-dim": "#7bd0ff",
+                        "secondary": "#a4d64c",
+                        "on-tertiary-fixed-variant": "#004c69",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-surface": "#d5e3fd",
+                        "background": "#051426",
+                        "on-secondary": "#233600",
+                        "secondary-fixed": "#bff365",
+                        "tertiary-container": "#001a27",
+                        "on-background": "#d5e3fd",
+                        "primary-container": "#0f172a",
+                        "on-tertiary": "#00354a",
+                        "tertiary": "#7bd0ff",
+                        "on-secondary-container": "#1e2f00",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-secondary-fixed": "#131f00",
+                        "surface-bright": "#2c3a4e",
+                        "on-primary": "#283044",
+                        "surface": "#051426",
+                        "inverse-primary": "#565e74",
+                        "error-container": "#93000a",
+                        "on-primary-container": "#798098",
+                        "on-primary-fixed": "#131b2e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "md": "16px",
+                        "gutter": "12px",
+                        "margin-mobile": "16px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "stats-xl": ["JetBrains Mono"],
+                        "label-caps": ["Inter"],
+                        "headline-lg": ["Archivo Narrow"],
+                        "body-md": ["Inter"],
+                        "stats-md": ["JetBrains Mono"],
+                        "headline-md": ["Archivo Narrow"],
+                        "display-lg": ["Archivo Narrow"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "stats-xl": ["24px", { "lineHeight": "24px", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "stats-md": ["14px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "display-lg": ["40px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md antialiased min-h-screen flex flex-col pb-[90px] md:pb-0">
+<!-- TopAppBar -->
+<header class="bg-surface-container/60 backdrop-blur-lg fixed top-0 w-full z-40 border-b border-white/10 flex justify-between items-center px-margin-mobile py-sm">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden flex items-center justify-center">
+<img alt="Club Crest" class="w-full h-full object-cover" data-alt="A stylized, modern geometric football club crest featuring sharp angles and a minimalist shield design, set against a deep navy background. The logo uses electric lime green and slate gray tones, creating a high-tech, professional sports aesthetic. The lighting is crisp and even, highlighting the clean lines of the vector graphic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWjZT_b4Fdy8B0vBsB5C89hBnmm-GDsvF4VQ4gT-HJHiwPX4K8pyl5NCUnXvd7d7n0ifGKxitLzv4IXMk-xvgpY1FcwKFw656QIsDIQD2MajpgsdNquEinsh7Jr2d86y9TfzQ7hK7BoVhR7Wo01t9PnPT_ElKyVUdDVe1ECwJJasLuqV14iNd6sYFaI8fXgP6gpoz44ilTFMvwqTD1JFWs1PginOQUOlrHMjrWYF0e1WdBT0ac4o_DSWHBo74JynEc3GRqsH1TQdYn"/>
+</div>
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight uppercase">M. HENDERSON</h1>
+</div>
+<div class="flex items-center">
+<span class="font-stats-md text-stats-md text-secondary uppercase bg-surface-variant/50 px-2 py-1 rounded-DEFAULT border border-white/5">VS MCI: 02:45:00</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 mt-[72px] px-margin-mobile pt-md flex flex-col gap-gutter">
+<!-- Hero Section -->
+<section class="relative rounded-xl overflow-hidden bg-surface-container-high/40 border border-white/5 h-48 md:h-64 flex items-end">
+<!-- Background Image -->
+<div class="absolute inset-0 z-0">
+<img alt="Stadium Background" class="w-full h-full object-cover opacity-30 mix-blend-luminosity" data-alt="An atmospheric, low-angle view of an empty professional football stadium at night under bright floodlights. The scene is bathed in a cool, deep navy and slate gray color palette, with subtle atmospheric haze adding depth. High-contrast lighting highlights the textures of the stands and the pitch, creating a sense of anticipation and premium digital aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5sohC8NpGl2DXni6GWNiaHtmiICgcGOVqBMrdVLrMeRO9UddV00B-zMFp-deCUxDgGgc3mkaNu7NkQIE-_W24RIvLdI7ntHKNUJWksz3Cx3MjUXHyjojWXspUb63lg8KCx4yCGgO-C4H7ctEFZt0GIN3ZycvluVrToxyWir2eLmwavmxZogueK3iYwYmdbjpVp8UOF-cEVSixxNVODskcgkJEHdCGiIxGxhbYAqk1470KkL5OR6XzYaqcTbUzx6sVJ2QscbWbkTVx"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
+</div>
+<!-- Hero Content -->
+<div class="relative z-10 p-md flex items-end justify-between w-full">
+<div class="flex items-end gap-md">
+<!-- Player Avatar Placeholder -->
+<div class="w-24 h-24 md:w-32 md:h-32 rounded-xl bg-surface-variant border-2 border-secondary/30 overflow-hidden shadow-[0_0_15px_rgba(164,214,76,0.15)]">
+<img alt="Player Avatar" class="w-full h-full object-cover grayscale opacity-80 mix-blend-screen" data-alt="A close-up, dramatic portrait of a male football player looking off-camera with intense focus. The lighting is cinematic, utilizing a rim light effect against a dark, moody background. The image has a desaturated, high-contrast look consistent with a modern sports UI, emphasizing sharp facial features and athletic determination." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhFELUsQlOVpJm5hlkYn4zUNHEbbGH6VQgemKJ73zxrD_6l3EvgJm3HnQYylexmg0q4z6Wls0sbHJ4NuRMjXu0TCepJLzXH3AQvQysBJyQjoZKBTj5NE13dPj1IB9TP3LI6xNDlVm3ItXAuCpjeKPOmP4li39-SeFpDcJi27tx8LAq9Z0r2F-TjxKj_dzrv63Wux0Z0CHXiNjigTn1ZuGOpgxiuEiJFfu3iRVqtHcXlt_FvWCW_HvSPGU0y8IDVCEgkK3lMl88quXd"/>
+</div>
+<div class="pb-xs">
+<div class="font-stats-xl text-stats-xl text-secondary mb-xs">88</div>
+<div class="font-label-caps text-label-caps text-on-surface-variant uppercase">CM / CDM</div>
+</div>
+</div>
+<div class="hidden md:flex flex-col items-end pb-xs">
+<div class="font-label-caps text-label-caps text-tertiary mb-xs flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+                        Excellent Form
+                    </div>
+<div class="text-on-surface-variant font-body-md text-sm">Value: £84.5M</div>
+</div>
+</div>
+</section>
+<!-- Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Stats Card -->
+<div class="md:col-span-7 bg-surface-container/60 backdrop-blur-lg border border-white/10 rounded-xl p-md flex flex-col justify-between hover:bg-surface-bright/20 transition-colors">
+<div class="flex items-center justify-between mb-lg">
+<h2 class="font-headline-md text-headline-md text-on-surface uppercase">Season Performance</h2>
+<span class="material-symbols-outlined text-on-surface-variant">monitoring</span>
+</div>
+<div class="grid grid-cols-3 gap-sm divide-x divide-white/10">
+<div class="flex flex-col items-center">
+<span class="font-stats-xl text-stats-xl text-on-surface">12</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-xs">Goals</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="font-stats-xl text-stats-xl text-on-surface">18</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-xs">Assists</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="font-stats-xl text-stats-xl text-secondary">8.2</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant mt-xs">Avg Rtg</span>
+</div>
+</div>
+</div>
+<!-- Manager Relationship -->
+<div class="md:col-span-5 bg-surface-container/60 backdrop-blur-lg border border-white/10 rounded-xl p-md flex flex-col justify-between hover:bg-surface-bright/20 transition-colors relative overflow-hidden">
+<div class="absolute -right-8 -top-8 w-32 h-32 bg-secondary/10 rounded-full blur-2xl"></div>
+<div class="flex items-center justify-between mb-md relative z-10">
+<h2 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Manager Trust</h2>
+<span class="material-symbols-outlined text-secondary">handshake</span>
+</div>
+<div class="relative z-10 flex items-end justify-between mt-auto">
+<div>
+<div class="font-headline-lg text-headline-lg text-secondary uppercase">Vital</div>
+<div class="font-body-md text-on-surface-variant text-sm mt-xs">Key Squad Member</div>
+</div>
+<!-- Small circular indicator -->
+<div class="w-12 h-12 rounded-full border-4 border-surface-variant relative flex items-center justify-center">
+<svg class="absolute inset-0 w-full h-full -rotate-90">
+<circle class="text-secondary" cx="24" cy="24" fill="none" r="20" stroke="currentColor" stroke-dasharray="125.6" stroke-dashoffset="15" stroke-width="4"></circle>
+</svg>
+<span class="font-stats-md text-stats-md text-on-surface">92</span>
+</div>
+</div>
+</div>
+<!-- Training Progress -->
+<div class="md:col-span-8 bg-surface-container/60 backdrop-blur-lg border border-white/10 rounded-xl p-md hover:bg-surface-bright/20 transition-colors">
+<div class="flex items-center justify-between mb-md">
+<h2 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Attribute Development</h2>
+<span class="material-symbols-outlined text-tertiary">fitness_center</span>
+</div>
+<div class="flex flex-col gap-sm">
+<!-- Bar 1 -->
+<div class="flex items-center gap-sm">
+<span class="font-label-caps text-label-caps text-on-surface w-20">PACE</span>
+<div class="flex-1 h-2 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[82%]"></div>
+</div>
+<span class="font-stats-md text-stats-md text-on-surface w-8 text-right">82</span>
+</div>
+<!-- Bar 2 -->
+<div class="flex items-center gap-sm">
+<span class="font-label-caps text-label-caps text-on-surface w-20">SHOOTING</span>
+<div class="flex-1 h-2 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-tertiary w-[78%]"></div>
+</div>
+<span class="font-stats-md text-stats-md text-on-surface w-8 text-right">78</span>
+</div>
+<!-- Bar 3 -->
+<div class="flex items-center gap-sm">
+<span class="font-label-caps text-label-caps text-on-surface w-20">PASSING</span>
+<div class="flex-1 h-2 bg-surface-variant rounded-full overflow-hidden relative">
+<div class="h-full bg-secondary w-[91%] shadow-[0_0_8px_rgba(164,214,76,0.8)]"></div>
+</div>
+<span class="font-stats-md text-stats-md text-secondary w-8 text-right">91</span>
+</div>
+<!-- Bar 4 -->
+<div class="flex items-center gap-sm">
+<span class="font-label-caps text-label-caps text-on-surface w-20">DEFENDING</span>
+<div class="flex-1 h-2 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[65%]"></div>
+</div>
+<span class="font-stats-md text-stats-md text-on-surface w-8 text-right">65</span>
+</div>
+</div>
+</div>
+<!-- Upcoming Match Focus -->
+<div class="md:col-span-4 bg-surface-container/60 backdrop-blur-lg border border-white/10 rounded-xl p-md flex flex-col justify-between hover:bg-surface-bright/20 transition-colors">
+<div class="flex flex-col h-full justify-between">
+<div>
+<h2 class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-xs">Next Fixture Focus</h2>
+<div class="font-headline-md text-headline-md text-on-surface">VS MAN CITY</div>
+</div>
+<div class="mt-md bg-surface-variant/30 rounded-lg p-sm border border-white/5">
+<div class="flex items-center gap-xs mb-xs">
+<span class="material-symbols-outlined text-secondary text-[18px]">strategy</span>
+<span class="font-label-caps text-label-caps text-secondary uppercase">Tactical Role</span>
+</div>
+<p class="font-body-md text-sm text-on-surface-variant leading-relaxed">
+                            Tasked with disrupting play in central areas and initiating rapid counter-transitions. Focus on progressive passing.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface-container/80 backdrop-blur-xl border-t border-white/10 hidden md:hidden">
+<div class="w-full flex justify-around items-center px-4 py-2 pb-safe bg-surface-container-low/90">
+<!-- Dashboard (Inactive) -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary/80 transition-all">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps mt-1">Dashboard</span>
+</div>
+<!-- Squad (Active for this Context) -->
+<div class="flex flex-col items-center justify-center text-secondary relative after:content-[''] after:absolute after:-bottom-1 after:w-1 after:h-1 after:bg-secondary after:rounded-full hover:text-secondary/80 transition-all scale-90 duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">groups</span>
+<span class="font-label-caps text-label-caps mt-1 font-bold">Squad</span>
+</div>
+<!-- Tactics (Inactive) -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary/80 transition-all">
+<span class="material-symbols-outlined">strategy</span>
+<span class="font-label-caps text-label-caps mt-1">Tactics</span>
+</div>
+<!-- Transfers (Inactive) -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary/80 transition-all">
+<span class="material-symbols-outlined">swap_horiz</span>
+<span class="font-label-caps text-label-caps mt-1">Transfers</span>
+</div>
+<!-- More (Inactive) -->
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary/80 transition-all">
+<span class="material-symbols-outlined">more_horiz</span>
+<span class="font-label-caps text-label-caps mt-1">More</span>
+</div>
+</div>
+</nav>
+<!-- Desktop Side Nav structural equivalent (hidden on mobile, acting as a visual anchor if expanded to desktop) -->
+<aside class="hidden md:flex flex-col fixed left-0 top-0 h-full w-[80px] bg-surface-container/80 backdrop-blur-xl border-r border-white/10 pt-[80px] pb-lg z-30 justify-between items-center">
+<div class="flex flex-col gap-lg w-full">
+<div class="flex justify-center w-full group cursor-pointer text-on-surface-variant hover:text-secondary transition-colors">
+<span class="material-symbols-outlined text-[28px]">dashboard</span>
+</div>
+<div class="flex justify-center w-full group cursor-pointer text-secondary relative after:content-[''] after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2 after:w-1 after:h-8 after:bg-secondary after:rounded-l-full">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">groups</span>
+</div>
+<div class="flex justify-center w-full group cursor-pointer text-on-surface-variant hover:text-secondary transition-colors">
+<span class="material-symbols-outlined text-[28px]">strategy</span>
+</div>
+<div class="flex justify-center w-full group cursor-pointer text-on-surface-variant hover:text-secondary transition-colors">
+<span class="material-symbols-outlined text-[28px]">swap_horiz</span>
+</div>
+</div>
+<div class="flex justify-center w-full group cursor-pointer text-on-surface-variant hover:text-secondary transition-colors">
+<span class="material-symbols-outlined text-[28px]">more_horiz</span>
+</div>
+</aside>
+</body></html>

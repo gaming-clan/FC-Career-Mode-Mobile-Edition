@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Squad Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@600;700&amp;family=Inter:wght@400;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#122033",
+                        "surface-container-highest": "#273649",
+                        "surface-bright": "#2c3a4e",
+                        "on-tertiary": "#00354a",
+                        "on-surface-variant": "#c6c6cd",
+                        "on-secondary-container": "#1e2f00",
+                        "secondary-fixed": "#bff365",
+                        "on-primary-container": "#798098",
+                        "background": "#051426",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#354e00",
+                        "surface-variant": "#273649",
+                        "on-primary": "#283044",
+                        "inverse-on-surface": "#233144",
+                        "tertiary-fixed": "#c4e7ff",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "surface-container-high": "#1c2b3e",
+                        "tertiary-container": "#001a27",
+                        "primary-fixed-dim": "#bec6e0",
+                        "surface-dim": "#051426",
+                        "surface-tint": "#bec6e0",
+                        "secondary-container": "#719e13",
+                        "on-tertiary-fixed": "#001e2c",
+                        "surface": "#051426",
+                        "on-secondary-fixed": "#131f00",
+                        "outline": "#909097",
+                        "error": "#ffb4ab",
+                        "outline-variant": "#45464d",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#004c69",
+                        "inverse-surface": "#d5e3fd",
+                        "primary-fixed": "#dae2fd",
+                        "on-primary-fixed": "#131b2e",
+                        "inverse-primary": "#565e74",
+                        "surface-container-low": "#0d1c2f",
+                        "on-background": "#d5e3fd",
+                        "on-surface": "#d5e3fd",
+                        "on-tertiary-container": "#008abb",
+                        "secondary-fixed-dim": "#a4d64c",
+                        "secondary": "#a4d64c",
+                        "tertiary": "#7bd0ff",
+                        "primary-container": "#0f172a",
+                        "surface-container-lowest": "#010f21",
+                        "on-secondary": "#233600",
+                        "primary": "#bec6e0",
+                        "tertiary-fixed-dim": "#7bd0ff",
+                        "on-error": "#690005"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "margin-mobile": "16px",
+                        "xl": "32px",
+                        "md": "16px",
+                        "xs": "4px",
+                        "gutter": "12px",
+                        "base": "4px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "stats-xl": ["JetBrains Mono"],
+                        "label-caps": ["Inter"],
+                        "body-md": ["Inter"],
+                        "display-lg": ["Archivo Narrow"],
+                        "headline-lg": ["Archivo Narrow"],
+                        "stats-md": ["JetBrains Mono"],
+                        "headline-md": ["Archivo Narrow"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "stats-xl": ["24px", { "lineHeight": "24px", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["40px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "stats-md": ["14px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        /* Glassmorphism utility layer */
+        .glass-panel {
+            background: linear-gradient(135deg, rgba(51, 65, 85, 0.6) 0%, rgba(51, 65, 85, 0.2) 100%);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .neon-glow {
+            box-shadow: 0 0 8px rgba(164, 214, 76, 0.3);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md min-h-screen pb-24 selection:bg-secondary selection:text-on-secondary">
+<!-- TopAppBar Shared Component -->
+<header class="bg-surface-container/60 backdrop-blur-lg flex justify-between items-center w-full px-margin-mobile py-sm border-b border-white/10 z-40 sticky top-0">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border border-outline-variant">
+<img alt="Club Crest" class="w-full h-full object-cover" data-alt="A stylized, high-tech football club crest featuring sharp geometric lines and a deep navy and electric neon color palette. The crest is rendered with a subtle metallic sheen, set against a dark, atmospheric background typical of modern sports management interfaces." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0suJUbfMluSUZcRY9wIRWJ1AcxvQ9adzfshbUmBJOHvFWw5QOVvHHN1ySzbbvqV8SggPUCoSKHUYKLukKgqpmtDDRm1hqqPixQdQQgG_PcuWJRrM9_e0ouQJPHCceU_iA1tf05H-9PXT2aO3mjHluafENMhbd0Js7zL0ENtc2CL4hxiSo1ql0I9Bx1An0zoHFvUx7X26UFdYJvzKcNfi-CkYXvacg7wH4V3pxG3uPYY5aR35GQa52Cw9bcfyI1YwW-YwVhFOEiKeK"/>
+</div>
+<h1 class="font-headline-md text-headline-md uppercase font-bold text-on-surface tracking-tight">M. HENDERSON</h1>
+</div>
+<div class="flex items-center gap-sm">
+<span class="font-label-caps text-label-caps text-secondary uppercase">VS MCI: 02:45:00</span>
+<button class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface-bright/20 transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="w-full flex flex-col gap-md pt-md">
+<!-- Header & Quick Actions -->
+<section class="px-margin-mobile flex justify-between items-end">
+<div>
+<h2 class="font-display-lg text-display-lg text-on-surface">Squad</h2>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase mt-1">Starting XI Match Fit</p>
+</div>
+<button class="bg-transparent border border-secondary text-secondary px-3 py-1.5 rounded-DEFAULT font-label-caps text-label-caps flex items-center gap-1 hover:bg-secondary/10 transition-colors neon-glow">
+<span class="material-symbols-outlined text-[16px]">bolt</span>
+                AUTO-PICK
+            </button>
+</section>
+<!-- Tabs -->
+<section class="w-full px-margin-mobile">
+<div class="flex space-x-2 overflow-x-auto hide-scrollbar pb-xs">
+<button class="bg-secondary text-on-secondary px-4 py-2 rounded-full font-label-caps text-label-caps whitespace-nowrap uppercase tracking-wider">
+                    First Team
+                </button>
+<button class="border border-outline-variant text-on-surface-variant px-4 py-2 rounded-full font-label-caps text-label-caps whitespace-nowrap uppercase tracking-wider hover:bg-surface-container-highest transition-colors">
+                    Reserves
+                </button>
+<button class="border border-outline-variant text-on-surface-variant px-4 py-2 rounded-full font-label-caps text-label-caps whitespace-nowrap uppercase tracking-wider hover:bg-surface-container-highest transition-colors">
+                    Youth Academy
+                </button>
+</div>
+</section>
+<!-- Tactical Overview Minimap (Decorative element to fit theme) -->
+<section class="px-margin-mobile">
+<div class="glass-panel rounded-xl h-24 w-full relative overflow-hidden flex items-center justify-center">
+<!-- Abstract Pitch Lines -->
+<div class="absolute inset-0 border-[0.5px] border-white/5 m-4 rounded"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 border-[0.5px] border-white/5 rounded-full"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-px h-full bg-white/5"></div>
+<div class="z-10 flex gap-gutter items-center">
+<span class="font-stats-xl text-stats-xl text-on-surface">4-3-3</span>
+<span class="font-label-caps text-label-caps text-tertiary uppercase border border-tertiary/30 px-2 py-0.5 rounded">Attacking</span>
+</div>
+</div>
+</section>
+<!-- Player List -->
+<section class="px-margin-mobile flex flex-col gap-sm pb-lg">
+<!-- Player Card 1 (Attacker) -->
+<article class="glass-panel rounded-xl p-md flex items-center gap-sm relative overflow-hidden group">
+<!-- Positional Accent Line -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-secondary"></div>
+<div class="relative w-12 h-12 rounded-full overflow-hidden border border-outline-variant shrink-0">
+<img alt="Player Portrait" class="w-full h-full object-cover" data-alt="A striking portrait of a male football player looking intensely off-camera. The lighting is dramatic, characteristic of a high-end sports management simulation game, featuring stark shadows and a cold, clinical atmosphere. He wears a dark jersey. The background is a blurred, deep navy abyss." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAYvoXlp-L2IiV6pvcMwLc9HEYA9LuO3PfF9DHooOK6USbkqF221YnBCm-N1iIJ8GX2fQLCxzx6VXY-sij5Sx2hBM4JdLflZwA20WR-w3Z6pR22VhTytvfEHO-eTdcx3NgjbG0PKQ-mYF4sHvDzDXa96kYtk6l5GSnWgFbPI0g3ES_FKgMYwpDXT5FKnjJ-KVAlZw_-AROyJsHs71SLL9dCDRiQUZa86U47ODp8iQ6qyponcbM4d-mFXcf31vIVBzswWDWni9g801e"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-1">
+<h3 class="font-headline-md text-[18px] leading-tight text-on-surface truncate uppercase">L. Martinez</h3>
+<span class="font-stats-xl text-[20px] text-secondary">88</span>
+</div>
+<div class="flex items-center gap-2 mb-2">
+<span class="font-label-caps text-[10px] bg-surface-container-highest text-on-surface-variant px-1.5 py-0.5 rounded">ST</span>
+<span class="font-label-caps text-[10px] text-on-surface-variant flex items-center gap-0.5"><span class="material-symbols-outlined text-[14px]">trending_up</span> Form</span>
+</div>
+<!-- Mini Stats -->
+<div class="flex gap-4">
+<div class="flex-1 flex flex-col gap-0.5">
+<span class="font-label-caps text-[9px] text-on-primary-container">FIT</span>
+<div class="w-full h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[95%]"></div>
+</div>
+</div>
+<div class="flex-1 flex flex-col gap-0.5">
+<span class="font-label-caps text-[9px] text-on-primary-container">MOR</span>
+<div class="w-full h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-tertiary w-[80%]"></div>
+</div>
+</div>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container border border-outline-variant text-on-surface hover:border-secondary transition-colors shrink-0">
+<span class="material-symbols-outlined text-[20px]">swap_vert</span>
+</button>
+</article>
+<!-- Player Card 2 (Midfielder - Needs Swap) -->
+<article class="glass-panel rounded-xl p-md flex items-center gap-sm relative overflow-hidden group">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-tertiary"></div>
+<div class="absolute inset-0 bg-error/5 z-0 pointer-events-none"></div> <!-- Danger overlay -->
+<div class="relative w-12 h-12 rounded-full overflow-hidden border border-error/50 shrink-0 z-10">
+<img alt="Player Portrait" class="w-full h-full object-cover" data-alt="A portrait of a male professional athlete looking slightly fatigued. The lighting is harsh and dramatic, fitting a modern corporate sports management aesthetic. He is set against a dark, moody blue background typical of a premium dashboard interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkT_OVE6v4mGP9vY6FqU-W6_DFPnPCrkT-8kJQQsrj963eQA4g-MD2CaJwIf-r7T7G1W6RFjkWRhyUgbOnQmA1eZ_RZ9Bsh0KRzDTOUCMe8XSLCvTAM3uVNkL3-shfkrd5gdIu0OcNWGWfdCAlf2hbqYQO7Y2MjEWN6jwSUpPyPD2CRVQkPwO-xIWf27Etsv4_mUuK4Hw3EG8Y7EezaSwbLnqv8OYSOXjvWE4pxjZpNTxd6Zx06tCojuRPW7M6TTdFcR5DZTnb5s-9"/>
+</div>
+<div class="flex-1 min-w-0 z-10">
+<div class="flex justify-between items-baseline mb-1">
+<h3 class="font-headline-md text-[18px] leading-tight text-on-surface truncate uppercase">K. De Bruyne</h3>
+<span class="font-stats-xl text-[20px] text-on-surface-variant">91</span>
+</div>
+<div class="flex items-center gap-2 mb-2">
+<span class="font-label-caps text-[10px] bg-surface-container-highest text-on-surface-variant px-1.5 py-0.5 rounded">CM</span>
+<span class="font-label-caps text-[10px] text-error flex items-center gap-0.5"><span class="material-symbols-outlined text-[14px]">warning</span> Fatigue</span>
+</div>
+<div class="flex gap-4">
+<div class="flex-1 flex flex-col gap-0.5">
+<span class="font-label-caps text-[9px] text-error">FIT</span>
+<div class="w-full h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-error w-[45%]"></div>
+</div>
+</div>
+<div class="flex-1 flex flex-col gap-0.5">
+<span class="font-label-caps text-[9px] text-on-primary-container">MOR</span>
+<div class="w-full h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-tertiary w-[90%]"></div>
+</div>
+</div>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-error/10 border border-error text-error hover:bg-error/20 transition-colors shrink-0 z-10 neon-glow" style="box-shadow: 0 0 8px rgba(255, 180, 171, 0.3);">
+<span class="material-symbols-outlined text-[20px]">swap_vert</span>
+</button>
+</article>
+<!-- Player Card 3 (Defender) -->
+<article class="glass-panel rounded-xl p-md flex items-center gap-sm relative overflow-hidden group">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-outline-variant"></div>
+<div class="relative w-12 h-12 rounded-full overflow-hidden border border-outline-variant shrink-0">
+<div class="w-full h-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-1">
+<h3 class="font-headline-md text-[18px] leading-tight text-on-surface truncate uppercase">R. Dias</h3>
+<span class="font-stats-xl text-[20px] text-on-surface">89</span>
+</div>
+<div class="flex items-center gap-2 mb-2">
+<span class="font-label-caps text-[10px] bg-surface-container-highest text-on-surface-variant px-1.5 py-0.5 rounded">CB</span>
+<span class="font-label-caps text-[10px] text-on-surface-variant flex items-center gap-0.5"><span class="material-symbols-outlined text-[14px]">horizontal_rule</span> Steady</span>
+</div>
+<div class="flex gap-4">
+<div class="flex-1 flex flex-col gap-0.5">
+<span class="font-label-caps text-[9px] text-on-primary-container">FIT</span>
+<div class="w-full h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary w-[85%]"></div>
+</div>
+</div>
+<div class="flex-1 flex flex-col gap-0.5">
+<span class="font-label-caps text-[9px] text-on-primary-container">MOR</span>
+<div class="w-full h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-tertiary w-[75%]"></div>
+</div>
+</div>
+</div>
+</div>
+<button class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container border border-outline-variant text-on-surface hover:border-secondary transition-colors shrink-0">
+<span class="material-symbols-outlined text-[20px]">swap_vert</span>
+</button>
+</article>
+</section>
+</main>
+<!-- BottomNavBar Shared Component -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 pb-safe bg-surface-container-low/90 backdrop-blur-xl rounded-t-xl z-50 md:hidden border-t border-white/5">
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary/80 transition-all gap-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+<span class="font-label-caps text-[10px]">Dashboard</span>
+</button>
+<button class="flex flex-col items-center justify-center text-secondary relative after:content-[''] after:absolute after:-bottom-1 after:w-1 after:h-1 after:bg-secondary after:rounded-full hover:text-secondary/80 transition-all scale-90 duration-200 gap-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">groups</span>
+<span class="font-label-caps text-[10px]">Squad</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary/80 transition-all gap-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">strategy</span>
+<span class="font-label-caps text-[10px]">Tactics</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary/80 transition-all gap-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">swap_horiz</span>
+<span class="font-label-caps text-[10px]">Transfers</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary/80 transition-all gap-1">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">more_horiz</span>
+<span class="font-label-caps text-[10px]">More</span>
+</button>
+</nav>
+</body></html>

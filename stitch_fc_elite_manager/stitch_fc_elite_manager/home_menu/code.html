@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Football Manager - Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&amp;family=JetBrains+Mono:wght@500;700&amp;family=Archivo+Narrow:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#122033",
+                        "outline": "#909097",
+                        "on-tertiary-fixed": "#001e2c",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed": "#c4e7ff",
+                        "surface-container-low": "#0d1c2f",
+                        "on-tertiary-container": "#008abb",
+                        "surface-dim": "#051426",
+                        "surface-tint": "#bec6e0",
+                        "secondary-fixed-dim": "#a4d64c",
+                        "inverse-on-surface": "#233144",
+                        "on-secondary-fixed-variant": "#354e00",
+                        "surface-variant": "#273649",
+                        "outline-variant": "#45464d",
+                        "inverse-surface": "#d5e3fd",
+                        "on-surface-variant": "#c6c6cd",
+                        "primary": "#bec6e0",
+                        "surface-container-highest": "#273649",
+                        "secondary-container": "#719e13",
+                        "surface-container-lowest": "#010f21",
+                        "primary-fixed": "#dae2fd",
+                        "on-error": "#690005",
+                        "surface-container-high": "#1c2b3e",
+                        "tertiary-fixed-dim": "#7bd0ff",
+                        "secondary": "#a4d64c",
+                        "on-tertiary-fixed-variant": "#004c69",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-surface": "#d5e3fd",
+                        "background": "#051426",
+                        "on-secondary": "#233600",
+                        "secondary-fixed": "#bff365",
+                        "tertiary-container": "#001a27",
+                        "on-background": "#d5e3fd",
+                        "primary-container": "#0f172a",
+                        "on-tertiary": "#00354a",
+                        "tertiary": "#7bd0ff",
+                        "on-secondary-container": "#1e2f00",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-secondary-fixed": "#131f00",
+                        "surface-bright": "#2c3a4e",
+                        "on-primary": "#283044",
+                        "surface": "#051426",
+                        "inverse-primary": "#565e74",
+                        "error-container": "#93000a",
+                        "on-primary-container": "#798098",
+                        "on-primary-fixed": "#131b2e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "md": "16px",
+                        "gutter": "12px",
+                        "margin-mobile": "16px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "stats-xl": ["JetBrains Mono"],
+                        "label-caps": ["Inter"],
+                        "headline-lg": ["Archivo Narrow"],
+                        "body-md": ["Inter"],
+                        "stats-md": ["JetBrains Mono"],
+                        "headline-md": ["Archivo Narrow"],
+                        "display-lg": ["Archivo Narrow"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "stats-xl": ["24px", {"lineHeight": "24px", "fontWeight": "700"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "headline-lg": ["32px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "stats-md": ["14px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "headline-md": ["24px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "display-lg": ["40px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>.glass-panel {
+        background-color: rgba(51, 65, 85, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px)
+        }
+.btn-glow:hover {
+        box-shadow: 0 0 12px rgba(164, 214, 76, 0.4)
+        }
+.hero-bg {
+    background-image: linear-gradient(to bottom, rgba(5, 20, 38, 0.2), rgba(5, 20, 38, 1)), url(https://lh3.googleusercontent.com/aida-public/AB6AXuANZjOwL8MnthCfPzDJcfFAenp9NlI_YQ3rMfQsHb3Fyf2PQs8ttwgHJaJhKIYaRPj73OsrpAdVQgtkN-UxBdUWS-ZmvKGQMJ4ivGMS16hVh6BORlBclT-YV7BgwFrWXHnvlquej-j45q4Btud6N8wZL4QZApUUOH-N9aTabDeL9iVBnG_LbdoKDkwEIMX7QyNxZJAV2SgpOS4hpHkaiqMeZh8HXVCoAuA_2J9GsxXjZndk0sEEe9x8jLbzmB0C_R6ITfSD-aCUrxLo);
+    background-size: cover;
+    background-position: center
+    }</style>
+</head>
+<body class="bg-background text-on-surface h-screen w-screen overflow-hidden flex flex-col font-body-md hero-bg" data-alt="A dramatic view of a football stadium pitch at night under bright floodlights. The perspective is from the player's tunnel, looking out onto the immaculate green grass. The atmosphere is tense and expectant, filled with high-contrast lighting and deep shadows. The color palette features deep navy blues of the stadium architecture contrasting with the electric lime green of the illuminated pitch, perfectly matching a high-stakes, modern sports aesthetic.">
+<!-- Top Navigation (Suppressed for Main Menu, but keeping a minimal brand anchor) -->
+<header class="w-full px-margin-mobile py-lg flex justify-center items-center z-10">
+<img alt="Football Manager Brand Logo" class="h-20 w-20 object-contain drop-shadow-lg" src="https://lh3.googleusercontent.com/aida/ADBb0uibM1shI1QPtHkUl6iYkpJBnXUZqWKC7x1NlrZ_u-iAfkK6FDqO67Z76xFO8mEALGgmzZIbNd8s0qClQZCUDS8VLboVdhkxfVpL-7YSlYlPVI_dVI2ajQYufDbpXMug4gNQm9Wbjj6XpsRcr0oPYbmDyqjC-2y2QpeX0fejXcIAnxCEZAHJbzp38HUKIqzKDeQVTKxL0dOY3m594WPLjVawjvu6P6fMz9c5Yk9ustSMWo9zyKXapw318Ww"/>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col justify-end px-margin-mobile pb-xl z-10 max-w-md mx-auto w-full gap-gutter">
+<!-- Continue Career Card -->
+<div class="glass-panel rounded-xl p-md flex flex-col gap-sm relative overflow-hidden group cursor-pointer transition-transform hover:scale-[1.02]">
+<div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
+<div class="flex justify-between items-start">
+<div>
+<h2 class="font-label-caps text-label-caps text-secondary uppercase tracking-widest mb-1">Continue Career</h2>
+<p class="font-headline-lg text-headline-lg text-on-surface">M. HENDERSON</p>
+</div>
+<div class="h-10 w-10 rounded-full bg-surface-container flex items-center justify-center border border-secondary/30">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">shield</span>
+</div>
+</div>
+<div class="flex items-center gap-sm mt-xs">
+<span class="font-stats-md text-stats-md text-on-surface-variant">London City FC</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-stats-md text-stats-md text-on-surface-variant">Season 2024/25</span>
+</div>
+<!-- Primary Action Button inside card -->
+<button class="mt-sm w-full bg-secondary text-primary-container font-headline-md text-headline-md uppercase py-sm rounded-lg flex items-center justify-center gap-xs btn-glow transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                Resume
+            </button>
+</div>
+<!-- Secondary Actions Grid -->
+<div class="grid grid-cols-2 gap-gutter mt-sm">
+<button class="glass-panel rounded-lg py-md flex flex-col items-center justify-center gap-xs hover:bg-surface-bright/40 transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant text-2xl">add_circle</span>
+<span class="font-label-caps text-label-caps text-on-surface">New Game</span>
+</button>
+<button class="glass-panel rounded-lg py-md flex flex-col items-center justify-center gap-xs hover:bg-surface-bright/40 transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant text-2xl">folder_open</span>
+<span class="font-label-caps text-label-caps text-on-surface">Load Game</span>
+</button>
+</div>
+<!-- Settings Action -->
+<button class="glass-panel rounded-lg py-sm px-md flex items-center justify-between hover:bg-surface-bright/40 transition-colors mt-xs border-transparent hover:border-white/10">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant">settings</span>
+<span class="font-body-md text-body-md text-on-surface">Settings</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">chevron_right</span>
+</button>
+</main>
+<!-- Bottom Nav & FAB intentionally suppressed as this is a transactional/linear entry screen -->
+</body></html>

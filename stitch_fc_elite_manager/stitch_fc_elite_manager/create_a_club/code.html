@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create Club - Stadium Night</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Archivo+Narrow:wght@600;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container": "#122033",
+                      "outline": "#909097",
+                      "on-tertiary-fixed": "#001e2c",
+                      "error": "#ffb4ab",
+                      "tertiary-fixed": "#c4e7ff",
+                      "surface-container-low": "#0d1c2f",
+                      "on-tertiary-container": "#008abb",
+                      "surface-dim": "#051426",
+                      "surface-tint": "#bec6e0",
+                      "secondary-fixed-dim": "#a4d64c",
+                      "inverse-on-surface": "#233144",
+                      "on-secondary-fixed-variant": "#354e00",
+                      "surface-variant": "#273649",
+                      "outline-variant": "#45464d",
+                      "inverse-surface": "#d5e3fd",
+                      "on-surface-variant": "#c6c6cd",
+                      "primary": "#bec6e0",
+                      "surface-container-highest": "#273649",
+                      "secondary-container": "#719e13",
+                      "surface-container-lowest": "#010f21",
+                      "primary-fixed": "#dae2fd",
+                      "on-error": "#690005",
+                      "surface-container-high": "#1c2b3e",
+                      "tertiary-fixed-dim": "#7bd0ff",
+                      "secondary": "#a4d64c",
+                      "on-tertiary-fixed-variant": "#004c69",
+                      "on-error-container": "#ffdad6",
+                      "primary-fixed-dim": "#bec6e0",
+                      "on-surface": "#d5e3fd",
+                      "background": "#051426",
+                      "on-secondary": "#233600",
+                      "secondary-fixed": "#bff365",
+                      "tertiary-container": "#001a27",
+                      "on-background": "#d5e3fd",
+                      "primary-container": "#0f172a",
+                      "on-tertiary": "#00354a",
+                      "tertiary": "#7bd0ff",
+                      "on-secondary-container": "#1e2f00",
+                      "on-primary-fixed-variant": "#3f465c",
+                      "on-secondary-fixed": "#131f00",
+                      "surface-bright": "#2c3a4e",
+                      "on-primary": "#283044",
+                      "surface": "#051426",
+                      "inverse-primary": "#565e74",
+                      "error-container": "#93000a",
+                      "on-primary-container": "#798098",
+                      "on-primary-fixed": "#131b2e"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "sm": "8px",
+                      "lg": "24px",
+                      "xs": "4px",
+                      "xl": "32px",
+                      "md": "16px",
+                      "gutter": "12px",
+                      "margin-mobile": "16px",
+                      "base": "4px"
+              },
+              "fontFamily": {
+                      "stats-xl": [
+                              "JetBrains Mono"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Archivo Narrow"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "stats-md": [
+                              "JetBrains Mono"
+                      ],
+                      "headline-md": [
+                              "Archivo Narrow"
+                      ],
+                      "display-lg": [
+                              "Archivo Narrow"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "stats-xl": [
+                              "24px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "36px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "stats-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "40px",
+                              {
+                                      "lineHeight": "44px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #273649;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #45464d;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen font-body-md flex flex-col relative bg-[url('https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?q=80&amp;w=2000&amp;auto=format&amp;fit=crop')] bg-cover bg-center bg-no-repeat bg-fixed" data-alt="A massive, modern football stadium at night under bright, clinical floodlights. The stands are plunged into deep, atmospheric navy shadows, while the pitch itself is a vibrant, electric green, glowing intensely against the dark environment. The scene emphasizes a high-stakes, premium sporting atmosphere with a sophisticated interplay of deep black, pristine white light, and striking neon green accents, perfectly aligning with a modern corporate sports management aesthetic.">
+<!-- Atmospheric Overlay -->
+<div class="absolute inset-0 bg-background/90 backdrop-blur-3xl z-0 pointer-events-none"></div>
+<!-- Top Header (Contextual Setup Header, distinct from standard TopAppBar) -->
+<header class="relative z-40 w-full px-margin-mobile py-md bg-surface-container/40 backdrop-blur-xl border-b border-white/5 flex justify-between items-center sticky top-0">
+<div class="flex items-center gap-md">
+<button class="w-10 h-10 rounded-full bg-surface-variant/50 flex items-center justify-center text-on-surface hover:bg-surface-variant transition-colors border border-white/10">
+<span class="material-symbols-outlined text-lg">close</span>
+</button>
+<div>
+<h1 class="font-headline-md text-headline-md text-on-surface uppercase tracking-tight">Setup Club</h1>
+<p class="font-label-caps text-label-caps text-tertiary">Step 1 of 3: Identity</p>
+</div>
+</div>
+<div class="hidden md:flex items-center gap-sm">
+<div class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(164,214,76,0.8)]"></div>
+<div class="w-2 h-2 rounded-full bg-surface-variant"></div>
+<div class="w-2 h-2 rounded-full bg-surface-variant"></div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="relative z-10 flex-1 w-full max-w-7xl mx-auto px-margin-mobile md:px-lg py-lg grid grid-cols-1 lg:grid-cols-12 gap-xl pb-32">
+<!-- Left Column: Live Preview Area (Sticky on Desktop) -->
+<div class="lg:col-span-5 relative">
+<div class="sticky top-32 w-full bg-surface-container-high/40 backdrop-blur-xl border border-white/10 rounded-xl p-lg flex flex-col items-center justify-center shadow-2xl overflow-hidden group">
+<!-- Decorative background elements -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-secondary/10 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2"></div>
+<div class="absolute bottom-0 left-0 w-48 h-48 bg-tertiary/10 rounded-full blur-[60px] translate-y-1/2 -translate-x-1/2"></div>
+<h2 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest mb-xl w-full text-center border-b border-white/5 pb-md">Live Preview</h2>
+<!-- Crest Preview -->
+<div class="relative w-48 h-56 flex items-center justify-center mb-lg">
+<!-- Dynamic Aura -->
+<div class="absolute inset-0 bg-secondary/20 blur-2xl rounded-full scale-75 group-hover:scale-100 transition-transform duration-700 ease-out"></div>
+<!-- Crest Base -->
+<div class="relative z-10 w-full h-full bg-gradient-to-b from-surface-container-lowest to-surface-container border border-secondary/50 rounded-t-[40px] rounded-b-[80px] flex flex-col items-center justify-center shadow-[0_10px_40px_rgba(0,0,0,0.5)] overflow-hidden">
+<!-- Inner pattern -->
+<div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+<!-- Selected Icon -->
+<span class="material-symbols-outlined text-[80px] text-secondary mb-sm drop-shadow-[0_0_15px_rgba(164,214,76,0.4)]">shield</span>
+<!-- Club Name Placeholder -->
+<div class="font-headline-lg text-headline-lg text-on-surface uppercase text-center leading-none px-sm tracking-tighter">NEW<br/>CLUB</div>
+<div class="font-stats-md text-stats-md text-on-surface-variant mt-xs">EST. 2024</div>
+</div>
+</div>
+<!-- Kit Colors Preview -->
+<div class="flex gap-lg w-full justify-center pt-md border-t border-white/5 mt-md">
+<div class="flex flex-col items-center gap-sm">
+<div class="font-label-caps text-label-caps text-on-surface-variant">HOME</div>
+<div class="w-12 h-16 rounded-t-lg rounded-b-sm bg-blue-600 border border-white/20 shadow-inner relative overflow-hidden">
+<div class="absolute inset-x-0 bottom-0 h-1/3 bg-blue-800"></div>
+<span class="material-symbols-outlined absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white/50 text-xl">apparel</span>
+</div>
+</div>
+<div class="flex flex-col items-center gap-sm">
+<div class="font-label-caps text-label-caps text-on-surface-variant">AWAY</div>
+<div class="w-12 h-16 rounded-t-lg rounded-b-sm bg-white border border-white/20 shadow-inner relative overflow-hidden">
+<div class="absolute inset-x-0 bottom-0 h-1/3 bg-gray-200"></div>
+<span class="material-symbols-outlined absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-black/20 text-xl">apparel</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Form Sections -->
+<div class="lg:col-span-7 flex flex-col gap-lg">
+<!-- Section 1: Club Identity -->
+<section class="bg-surface-variant/30 backdrop-blur-md border border-white/5 rounded-xl p-lg shadow-lg">
+<div class="flex items-center gap-sm mb-lg">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-tertiary border border-tertiary/30">
+<span class="material-symbols-outlined text-sm">badge</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface uppercase">Club Identity</h3>
+</div>
+<div class="space-y-md">
+<div class="flex flex-col gap-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase" for="clubName">Full Club Name</label>
+<input class="w-full bg-surface-dim border border-outline-variant rounded-lg px-md py-sm text-on-surface font-body-lg text-body-lg focus:outline-none focus:border-tertiary focus:ring-1 focus:ring-tertiary/50 transition-all placeholder:text-outline-variant/50" id="clubName" placeholder="e.g. AFC Richmond" type="text"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<div class="flex flex-col gap-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase" for="nickname">Nickname (Optional)</label>
+<input class="w-full bg-surface-dim border border-outline-variant rounded-lg px-md py-sm text-on-surface font-body-md text-body-md focus:outline-none focus:border-tertiary focus:ring-1 focus:ring-tertiary/50 transition-all placeholder:text-outline-variant/50" id="nickname" placeholder="e.g. The Greyhounds" type="text"/>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase" for="yearFounded">Year Founded</label>
+<input class="w-full bg-surface-dim border border-outline-variant rounded-lg px-md py-sm text-on-surface font-stats-md text-stats-md focus:outline-none focus:border-tertiary focus:ring-1 focus:ring-tertiary/50 transition-all" id="yearFounded" type="number" value="2024"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Crest Selection -->
+<section class="bg-surface-variant/30 backdrop-blur-md border border-white/5 rounded-xl p-lg shadow-lg">
+<div class="flex items-center justify-between mb-lg">
+<div class="flex items-center gap-sm">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-secondary border border-secondary/30">
+<span class="material-symbols-outlined text-sm">stars</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface uppercase">Crest Base</h3>
+</div>
+<span class="font-label-caps text-label-caps text-secondary bg-secondary/10 px-sm py-xs rounded-full border border-secondary/20">CLASSIC SHIELD</span>
+</div>
+<div class="grid grid-cols-4 sm:grid-cols-6 gap-sm">
+<!-- Active State -->
+<button class="aspect-square bg-surface-container-high border-2 border-secondary rounded-lg flex items-center justify-center text-secondary shadow-[0_0_15px_rgba(164,214,76,0.15)] relative overflow-hidden group">
+<div class="absolute inset-0 bg-secondary/5 group-hover:bg-secondary/10 transition-colors"></div>
+<span class="material-symbols-outlined text-3xl z-10">shield</span>
+</button>
+<!-- Inactive States -->
+<button class="aspect-square bg-surface border border-outline-variant rounded-lg flex items-center justify-center text-on-surface-variant hover:border-secondary/50 hover:text-secondary hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined text-3xl">local_police</span>
+</button>
+<button class="aspect-square bg-surface border border-outline-variant rounded-lg flex items-center justify-center text-on-surface-variant hover:border-secondary/50 hover:text-secondary hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined text-3xl">hexagon</span>
+</button>
+<button class="aspect-square bg-surface border border-outline-variant rounded-lg flex items-center justify-center text-on-surface-variant hover:border-secondary/50 hover:text-secondary hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined text-3xl">pentagon</span>
+</button>
+<button class="aspect-square bg-surface border border-outline-variant rounded-lg flex items-center justify-center text-on-surface-variant hover:border-secondary/50 hover:text-secondary hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined text-3xl">circle</span>
+</button>
+<button class="aspect-square bg-surface border border-outline-variant rounded-lg flex items-center justify-center text-on-surface-variant hover:border-secondary/50 hover:text-secondary hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined text-3xl">change_history</span>
+</button>
+</div>
+</section>
+<!-- Section 3: Kit Designer -->
+<section class="bg-surface-variant/30 backdrop-blur-md border border-white/5 rounded-xl p-lg shadow-lg">
+<div class="flex items-center gap-sm mb-lg">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-tertiary border border-tertiary/30">
+<span class="material-symbols-outlined text-sm">palette</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface uppercase">Kit Colors</h3>
+</div>
+<div class="space-y-lg">
+<!-- Home Colors -->
+<div>
+<h4 class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-sm">Primary / Home Kit</h4>
+<div class="flex flex-wrap gap-sm">
+<button class="w-10 h-10 rounded-full bg-red-600 border-2 border-transparent hover:scale-110 transition-transform shadow-lg"></button>
+<!-- Active Color -->
+<button class="w-10 h-10 rounded-full bg-blue-600 border-2 border-surface-container ring-2 ring-secondary ring-offset-2 ring-offset-surface-variant hover:scale-110 transition-transform shadow-lg"></button>
+<button class="w-10 h-10 rounded-full bg-green-600 border-2 border-transparent hover:scale-110 transition-transform shadow-lg"></button>
+<button class="w-10 h-10 rounded-full bg-yellow-400 border-2 border-transparent hover:scale-110 transition-transform shadow-lg"></button>
+<button class="w-10 h-10 rounded-full bg-white border-2 border-transparent hover:scale-110 transition-transform shadow-lg"></button>
+<button class="w-10 h-10 rounded-full bg-black border-2 border-white/20 hover:scale-110 transition-transform shadow-lg"></button>
+<button class="w-10 h-10 rounded-full bg-purple-600 border-2 border-transparent hover:scale-110 transition-transform shadow-lg"></button>
+<button class="w-10 h-10 rounded-full bg-[#051426] border-2 border-outline hover:scale-110 transition-transform shadow-lg"></button>
+</div>
+</div>
+<!-- Away Colors -->
+<div class="pt-sm border-t border-white/5">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-sm">Secondary / Away Kit</h4>
+<div class="flex flex-wrap gap-sm">
+<button class="w-10 h-10 rounded-full bg-red-600 border-2 border-transparent hover:scale-110 transition-transform shadow-lg"></button>
+<button class="w-10 h-10 rounded-full bg-blue-600 border-2 border-transparent hover:scale-110 transition-transform shadow-lg"></button>
+<button class="w-10 h-10 rounded-full bg-green-600 border-2 border-transparent hover:scale-110 transition-transform shadow-lg"></button>
+<button class="w-10 h-10 rounded-full bg-yellow-400 border-2 border-transparent hover:scale-110 transition-transform shadow-lg"></button>
+<!-- Active Color -->
+<button class="w-10 h-10 rounded-full bg-white border-2 border-surface-container ring-2 ring-secondary ring-offset-2 ring-offset-surface-variant hover:scale-110 transition-transform shadow-lg"></button>
+<button class="w-10 h-10 rounded-full bg-black border-2 border-white/20 hover:scale-110 transition-transform shadow-lg"></button>
+<button class="w-10 h-10 rounded-full bg-purple-600 border-2 border-transparent hover:scale-110 transition-transform shadow-lg"></button>
+<button class="w-10 h-10 rounded-full bg-orange-500 border-2 border-transparent hover:scale-110 transition-transform shadow-lg"></button>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 4: Stadium Info -->
+<section class="bg-surface-variant/30 backdrop-blur-md border border-white/5 rounded-xl p-lg shadow-lg">
+<div class="flex items-center gap-sm mb-lg">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-tertiary border border-tertiary/30">
+<span class="material-symbols-outlined text-sm">stadium</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface uppercase">Stadium Info</h3>
+</div>
+<div class="space-y-md">
+<div class="flex flex-col gap-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase" for="stadiumName">Stadium Name</label>
+<input class="w-full bg-surface-dim border border-outline-variant rounded-lg px-md py-sm text-on-surface font-body-lg text-body-lg focus:outline-none focus:border-tertiary focus:ring-1 focus:ring-tertiary/50 transition-all placeholder:text-outline-variant/50" id="stadiumName" placeholder="e.g. The Nelson Road" type="text"/>
+</div>
+<div class="flex flex-col gap-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase flex justify-between">
+<span>Initial Capacity</span>
+<span class="text-tertiary font-stats-md">15,000</span>
+</label>
+<div class="relative w-full h-2 bg-surface-dim rounded-full mt-sm border border-white/5 overflow-hidden">
+<div class="absolute top-0 left-0 h-full bg-gradient-to-r from-tertiary to-secondary w-[15%] rounded-full"></div>
+</div>
+<div class="flex justify-between text-xs text-outline-variant mt-1 font-stats-md">
+<span>10K</span>
+<span>100K</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Fixed Bottom Action Bar -->
+<div class="fixed bottom-0 left-0 w-full bg-surface-container/90 backdrop-blur-xl border-t border-white/10 p-md md:px-lg md:py-md flex justify-between items-center z-50 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+<button class="hidden md:flex items-center gap-xs text-on-surface-variant hover:text-on-surface font-label-caps text-label-caps px-sm py-xs transition-colors">
+<span class="material-symbols-outlined text-sm">restart_alt</span> RESET
+        </button>
+<button class="w-full md:w-auto bg-secondary text-on-secondary font-headline-md text-headline-md uppercase px-xl py-sm rounded-lg hover:bg-secondary-fixed hover:shadow-[0_0_20px_rgba(164,214,76,0.3)] transition-all flex items-center justify-center gap-sm">
+            Confirm Details
+            <span class="material-symbols-outlined text-xl">arrow_forward</span>
+</button>
+</div>
+</body></html>

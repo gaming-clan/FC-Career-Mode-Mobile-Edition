@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sporting Director - Club Strategy</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:ital,wght@0,400..700;1,400..700&amp;family=Inter:wght@100..900&amp;family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container": "#122033",
+                        "outline": "#909097",
+                        "on-tertiary-fixed": "#001e2c",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed": "#c4e7ff",
+                        "surface-container-low": "#0d1c2f",
+                        "on-tertiary-container": "#008abb",
+                        "surface-dim": "#051426",
+                        "surface-tint": "#bec6e0",
+                        "secondary-fixed-dim": "#a4d64c",
+                        "inverse-on-surface": "#233144",
+                        "on-secondary-fixed-variant": "#354e00",
+                        "surface-variant": "#273649",
+                        "outline-variant": "#45464d",
+                        "inverse-surface": "#d5e3fd",
+                        "on-surface-variant": "#c6c6cd",
+                        "primary": "#bec6e0",
+                        "surface-container-highest": "#273649",
+                        "secondary-container": "#719e13",
+                        "surface-container-lowest": "#010f21",
+                        "primary-fixed": "#dae2fd",
+                        "on-error": "#690005",
+                        "surface-container-high": "#1c2b3e",
+                        "tertiary-fixed-dim": "#7bd0ff",
+                        "secondary": "#a4d64c",
+                        "on-tertiary-fixed-variant": "#004c69",
+                        "on-error-container": "#ffdad6",
+                        "primary-fixed-dim": "#bec6e0",
+                        "on-surface": "#d5e3fd",
+                        "background": "#051426",
+                        "on-secondary": "#233600",
+                        "secondary-fixed": "#bff365",
+                        "tertiary-container": "#001a27",
+                        "on-background": "#d5e3fd",
+                        "primary-container": "#0f172a",
+                        "on-tertiary": "#00354a",
+                        "tertiary": "#7bd0ff",
+                        "on-secondary-container": "#1e2f00",
+                        "on-primary-fixed-variant": "#3f465c",
+                        "on-secondary-fixed": "#131f00",
+                        "surface-bright": "#2c3a4e",
+                        "on-primary": "#283044",
+                        "surface": "#051426",
+                        "inverse-primary": "#565e74",
+                        "error-container": "#93000a",
+                        "on-primary-container": "#798098",
+                        "on-primary-fixed": "#131b2e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "xl": "32px",
+                        "md": "16px",
+                        "gutter": "12px",
+                        "margin-mobile": "16px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "stats-xl": ["JetBrains Mono"],
+                        "label-caps": ["Inter"],
+                        "headline-lg": ["Archivo Narrow"],
+                        "body-md": ["Inter"],
+                        "stats-md": ["JetBrains Mono"],
+                        "headline-md": ["Archivo Narrow"],
+                        "display-lg": ["Archivo Narrow"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "stats-xl": ["24px", { "lineHeight": "24px", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-lg": ["32px", { "lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "stats-md": ["14px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "display-lg": ["40px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+            font-family: theme('fontFamily.body-md');
+        }
+        .glass-card {
+            background-color: rgba(51, 65, 85, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .bg-gradient-movement {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(0,0,0,0) 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="antialiased min-h-screen flex flex-col pb-24 md:pb-0">
+<!-- TopAppBar (From JSON) -->
+<header class="fixed top-0 w-full z-50 bg-surface-container/60 backdrop-blur-lg border-b border-white/10 px-margin-mobile py-sm flex justify-between items-center h-16 md:hidden">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center overflow-hidden border border-white/10">
+<img alt="Club Crest" class="w-full h-full object-cover" data-alt="A small, circular profile image of a club manager in a dark suit against a stadium background. High contrast, professional lighting. Deep navy and slate tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOroCEOFa5yBHnfwkaOIGIiRHGuzhWB4F8uPpLyvcDERuCjEiFZ37KfCrX-9UadEe6CpchV-fPTU3ipX07qK0IxmLd3L0A1WsnNeJjNivLjBbogZ8jYjxy-aoTFByyYo3-2HLYvc7Q4Hq5i1mtJ29cMPhRqYejLE7YiA52Ybz0sIx_L3FW6OSdje2jt7dJrDkFfpElGva_2rGe_wZu3QvNmuzwBg0_sqFFjQ8b2MVDbPDb6HIrMU79NBPm8ZM34HB7U3RiMKZfSNM6"/>
+</div>
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight uppercase">M. HENDERSON</h1>
+</div>
+<div>
+<span class="font-label-caps text-label-caps text-secondary uppercase bg-surface-variant px-2 py-1 rounded">VS MCI: 02:45:00</span>
+</div>
+</header>
+<!-- Desktop TopAppBar (Hybrid interpretation for md+ screens) -->
+<header class="hidden md:flex fixed top-0 w-full z-50 bg-surface-container/60 backdrop-blur-lg border-b border-white/10 px-lg py-sm justify-between items-center h-20">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center overflow-hidden border border-white/10">
+<img alt="Club Crest" class="w-full h-full object-cover" data-alt="A small, circular profile image of a club manager in a dark suit against a stadium background. High contrast, professional lighting. Deep navy and slate tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD617TB19_JUMtv6bygOCSOFI16zOizLXHA7Z_UkEL2gKiejdAxsc_GJyGFr7_8fNKgOv6uSpy7WDHzja0p_fjotg1dYUOqneP9iPM4saGDSSuEFn88pNOMx7ILSRym_0lm_jUTQU6EiUHj7ZsN3mY0QFaS-0siBUl5_ENRTuaQ3QMsEylFL3GRE127BQ5V9DDQ96rvE4Tx1yhoT3J9IiPqaqYPzs5m5S6nawPL6ycepFSs8gqpkMxcmvbFwcMAoJgwYeYzW_WnzVv1"/>
+</div>
+<h1 class="font-headline-lg text-headline-lg font-bold text-on-surface tracking-tight uppercase">M. HENDERSON</h1>
+</div>
+<!-- Desktop Nav Cluster -->
+<nav class="flex gap-6">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:bg-surface-bright/20 transition-colors px-3 py-2 rounded" href="#">DASHBOARD</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:bg-surface-bright/20 transition-colors px-3 py-2 rounded" href="#">SQUAD</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:bg-surface-bright/20 transition-colors px-3 py-2 rounded" href="#">TACTICS</a>
+<a class="font-label-caps text-label-caps text-secondary font-bold border-b-2 border-secondary px-3 py-2" href="#">TRANSFERS</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:bg-surface-bright/20 transition-colors px-3 py-2 rounded" href="#">MORE</a>
+</nav>
+<div class="flex items-center gap-4">
+<span class="font-label-caps text-label-caps text-secondary uppercase bg-surface-variant px-3 py-1.5 rounded border border-white/10">VS MCI: 02:45:00</span>
+<button class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center hover:bg-surface-bright transition-colors border border-white/10">
+<span class="material-symbols-outlined text-on-surface">notifications</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 mt-20 md:mt-28 px-margin-mobile md:px-lg max-w-7xl mx-auto w-full flex flex-col gap-lg">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-2">
+<div>
+<h2 class="font-display-lg text-display-lg text-on-surface uppercase tracking-tight">Sporting Director</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Long-term club strategy and recruitment overview.</p>
+</div>
+<button class="bg-secondary text-primary-container font-label-caps text-label-caps uppercase px-6 py-3 rounded hover:shadow-[0_0_8px_rgba(164,214,76,0.4)] transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-base">person_add</span>
+                Initiate Negotiation
+            </button>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter md:gap-lg">
+<!-- Transfer Budget Overview (Span 8 cols on desktop) -->
+<section class="glass-card rounded-xl p-md md:p-lg col-span-1 md:col-span-8 flex flex-col bg-gradient-movement relative overflow-hidden">
+<!-- Background decorative element -->
+<div class="absolute -right-20 -top-20 opacity-5 pointer-events-none">
+<span class="material-symbols-outlined text-[200px]" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+</div>
+<div class="flex justify-between items-start mb-6 z-10">
+<h3 class="font-headline-md text-headline-md text-on-surface uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary">payments</span>
+                        Transfer Budget
+                    </h3>
+<span class="font-label-caps text-label-caps text-on-surface-variant border border-white/10 px-2 py-1 rounded bg-surface-container-highest">SUMMER WINDOW</span>
+</div>
+<div class="flex flex-col md:flex-row gap-6 md:gap-12 z-10 flex-1 justify-center items-center md:items-start">
+<!-- Main Budget -->
+<div class="flex flex-col text-center md:text-left">
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-1 uppercase">Available Funds</span>
+<span class="font-stats-xl text-stats-xl text-secondary text-4xl md:text-5xl">£145.2M</span>
+<div class="mt-4 bg-surface-container-highest rounded-full h-2 w-full md:w-64 overflow-hidden border border-white/5">
+<div class="bg-secondary h-full rounded-full w-[65%] shadow-[0_0_8px_rgba(164,214,76,0.6)]"></div>
+</div>
+<span class="font-stats-md text-stats-md text-on-surface-variant mt-2">£78.5M Committed (35%)</span>
+</div>
+<!-- Wage Budget -->
+<div class="flex flex-col text-center md:text-left border-t md:border-t-0 md:border-l border-white/10 pt-6 md:pt-0 md:pl-12 w-full md:w-auto">
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-1 uppercase">Wage Budget (Weekly)</span>
+<span class="font-stats-xl text-stats-xl text-on-surface text-3xl">£3.2M</span>
+<div class="mt-4 bg-surface-container-highest rounded-full h-2 w-full md:w-48 overflow-hidden border border-white/5">
+<div class="bg-tertiary h-full rounded-full w-[88%] shadow-[0_0_8px_rgba(123,208,255,0.6)]"></div>
+</div>
+<span class="font-stats-md text-stats-md text-error mt-2">Critical: £2.8M Used (88%)</span>
+</div>
+</div>
+</section>
+<!-- Scouting Network Status (Span 4 cols on desktop) -->
+<section class="glass-card rounded-xl p-md md:p-lg col-span-1 md:col-span-4 flex flex-col bg-gradient-movement">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-headline-md text-headline-md text-on-surface uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">travel_explore</span>
+                        Scouting
+                    </h3>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-on-surface transition-colors">more_vert</span>
+</div>
+<div class="flex-1 flex flex-col justify-center gap-4">
+<div class="relative w-full h-32 rounded bg-surface-container-highest border border-white/5 overflow-hidden flex items-center justify-center">
+<!-- Abstract Map Representation -->
+<div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 50% 50%, rgba(164, 214, 76, 0.4) 0%, transparent 60%);"></div>
+<span class="material-symbols-outlined text-6xl text-secondary/30">public</span>
+<!-- Active Regions Dots -->
+<div class="absolute top-1/4 left-1/4 w-2 h-2 rounded-full bg-secondary shadow-[0_0_6px_rgba(164,214,76,0.8)] animate-pulse"></div>
+<div class="absolute bottom-1/3 right-1/4 w-2 h-2 rounded-full bg-tertiary shadow-[0_0_6px_rgba(123,208,255,0.8)]"></div>
+<div class="absolute top-1/2 right-1/3 w-2 h-2 rounded-full bg-secondary shadow-[0_0_6px_rgba(164,214,76,0.8)]"></div>
+<div class="absolute bottom-2 left-2 right-2 flex justify-between px-2">
+<span class="font-label-caps text-label-caps text-on-surface-variant">12 ACTIVE SCOUTS</span>
+<span class="font-label-caps text-label-caps text-secondary">3 REGIONS</span>
+</div>
+</div>
+<div class="space-y-2 mt-2">
+<div class="flex justify-between items-center bg-surface-container/50 px-3 py-2 rounded border border-white/5">
+<span class="font-body-md text-body-md text-on-surface">South America</span>
+<span class="font-stats-md text-stats-md text-secondary">High Priority</span>
+</div>
+<div class="flex justify-between items-center bg-surface-container/50 px-3 py-2 rounded border border-white/5">
+<span class="font-body-md text-body-md text-on-surface">Eastern Europe</span>
+<span class="font-stats-md text-stats-md text-tertiary">Monitoring</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Negotiation Queue (Span 6 cols on desktop) -->
+<section class="glass-card rounded-xl p-md md:p-lg col-span-1 md:col-span-6 flex flex-col bg-gradient-movement min-h-[300px]">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md text-on-surface uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary">handshake</span>
+                        Negotiation Queue
+                    </h3>
+<span class="w-6 h-6 rounded-full bg-tertiary/20 text-tertiary flex items-center justify-center font-stats-md text-stats-md">3</span>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Queue Item 1 -->
+<div class="bg-surface-container-highest/60 border border-white/10 rounded-lg p-3 flex items-center gap-4 hover:bg-surface-bright/40 transition-colors cursor-pointer group">
+<div class="w-12 h-12 rounded bg-surface-variant flex items-center justify-center overflow-hidden border border-white/5">
+<img alt="Player" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="A close-up portrait of a young male athlete looking determined, set against a dark stadium background. Subtle neon blue highlights on the edges." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXTMoaYVtQcABDIkg0XW2w5eGFRGKQDhIBOfPlYZgtn0XG16bFEdfij85o_koI1FN4wQ9kTG1rS0DIW4KkQ6HRjOKfzc2PimW8K2lCqPtPd-m-XROWCeRzK7XLWX_2zuUcjfxE78yyUdtXqq7pScT9DfnnX-v0fHLPifGGO54CPXhZHYiBeQ_0tIPqlzzPVfD0G43Is1eG5DgXac9NOEsYbPZGZon_Xn7KKPdYvy80Z6q32LB0Q4ctPW-YZFmpXx3Uy6ESAmSvjHoA"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h4 class="font-headline-md text-headline-md text-on-surface text-lg">L. SILVA</h4>
+<span class="font-label-caps text-label-caps text-secondary px-2 py-0.5 bg-secondary/10 rounded border border-secondary/20">OFFER MADE</span>
+</div>
+<div class="flex justify-between items-center mt-1">
+<span class="font-body-md text-body-md text-on-surface-variant text-sm">AM(C) • 21y • FC Porto</span>
+<span class="font-stats-md text-stats-md text-on-surface">£45M</span>
+</div>
+</div>
+</div>
+<!-- Queue Item 2 -->
+<div class="bg-surface-container-highest/60 border border-white/10 rounded-lg p-3 flex items-center gap-4 hover:bg-surface-bright/40 transition-colors cursor-pointer group">
+<div class="w-12 h-12 rounded bg-surface-variant flex items-center justify-center overflow-hidden border border-white/5">
+<img alt="Player" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" data-alt="A portrait of a male soccer player with short hair, lit by dramatic floodlights in a dark, atmospheric setting. High contrast, modern aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfyI2kewB67_UTY0fy2pQxx_4xKndt7Iu6I5wX4Zp_8Bqi2n9hXbOTISBu5sQrip25sr_Zc0P9fuwJ3x7xZgijNhGQBSH6tZgKfUYFSoI643gXj3Y4085GTX3UXtOrhUItvyCxhmYgXYjisYvGeYRpXJUXRrKJB6KYC1EOjR6XniOPyB1nt1_nvokgi2AS55-c1dhm0al5P5cntIvfqlpxmMRd7empcBxqc7--5fCPugHeU_HO3ha0F9fZBY6JeipYn1BTkQOBkG6Q"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h4 class="font-headline-md text-headline-md text-on-surface text-lg">M. KONE</h4>
+<span class="font-label-caps text-label-caps text-tertiary px-2 py-0.5 bg-tertiary/10 rounded border border-tertiary/20">TALKS</span>
+</div>
+<div class="flex justify-between items-center mt-1">
+<span class="font-body-md text-body-md text-on-surface-variant text-sm">D(C) • 24y • M'Gladbach</span>
+<span class="font-stats-md text-stats-md text-on-surface">£22M</span>
+</div>
+</div>
+</div>
+<!-- Queue Item 3 -->
+<div class="bg-surface-container-highest/60 border border-white/10 rounded-lg p-3 flex items-center gap-4 hover:bg-surface-bright/40 transition-colors cursor-pointer opacity-70">
+<div class="w-12 h-12 rounded bg-surface-variant flex items-center justify-center overflow-hidden border border-white/5">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start">
+<h4 class="font-headline-md text-headline-md text-on-surface text-lg">J. BELLINGHAM</h4>
+<span class="font-label-caps text-label-caps text-error px-2 py-0.5 bg-error/10 rounded border border-error/20">STALLED</span>
+</div>
+<div class="flex justify-between items-center mt-1">
+<span class="font-body-md text-body-md text-on-surface-variant text-sm">M(C) • 20y • R. Madrid</span>
+<span class="font-stats-md text-stats-md text-on-surface">£110M</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Club Vision (Span 6 cols on desktop) -->
+<section class="glass-card rounded-xl p-md md:p-lg col-span-1 md:col-span-6 flex flex-col bg-gradient-movement min-h-[300px]">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-headline-md text-on-surface uppercase flex items-center gap-2">
+<span class="material-symbols-outlined text-outline">verified</span>
+                        Club Vision
+                    </h3>
+<span class="font-label-caps text-label-caps text-on-surface-variant">BOARD EXPECTATIONS</span>
+</div>
+<div class="flex flex-col gap-4">
+<!-- Vision Objective 1 -->
+<div class="border-l-2 border-secondary pl-4 py-1">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-body-md text-body-md font-bold text-on-surface">Sign U23 Players for First Team</h4>
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm mb-2">Focus on youth development and resale value.</p>
+<div class="bg-surface-container-highest rounded-full h-1.5 w-full overflow-hidden border border-white/5">
+<div class="bg-secondary h-full rounded-full w-[75%]"></div>
+</div>
+</div>
+<!-- Vision Objective 2 -->
+<div class="border-l-2 border-tertiary pl-4 py-1 mt-2">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-body-md text-body-md font-bold text-on-surface">Expand Stadium Capacity</h4>
+<span class="material-symbols-outlined text-tertiary text-sm">schedule</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm mb-2">Increase capacity to 60,000 by 2026 season.</p>
+<div class="bg-surface-container-highest rounded-full h-1.5 w-full overflow-hidden border border-white/5">
+<div class="bg-tertiary h-full rounded-full w-[30%]"></div>
+</div>
+</div>
+<!-- Vision Objective 3 -->
+<div class="border-l-2 border-error pl-4 py-1 mt-2">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-body-md text-body-md font-bold text-on-surface">Reduce Wage Bill</h4>
+<span class="material-symbols-outlined text-error text-sm">warning</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm mb-2">Trim squad fringe players to balance books.</p>
+<div class="bg-surface-container-highest rounded-full h-1.5 w-full overflow-hidden border border-white/5">
+<div class="bg-error h-full rounded-full w-[15%]"></div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- BottomNavBar (From JSON - Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 py-2 pb-safe bg-surface-container-low/90 md:hidden z-50 border-t border-white/10 rounded-t-xl backdrop-blur-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary/80 transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps mt-1">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary/80 transition-all" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-caps text-label-caps mt-1">Squad</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary/80 transition-all" href="#">
+<span class="material-symbols-outlined">strategy</span>
+<span class="font-label-caps text-label-caps mt-1">Tactics</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary relative after:content-[''] after:absolute after:-bottom-1 after:w-1 after:h-1 after:bg-secondary after:rounded-full scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">swap_horiz</span>
+<span class="font-label-caps text-label-caps mt-1">Transfers</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary/80 transition-all" href="#">
+<span class="material-symbols-outlined">more_horiz</span>
+<span class="font-label-caps text-label-caps mt-1">More</span>
+</a>
+</nav>
+</body></html>
