@@ -1,16 +1,33 @@
-# flutter_app
+# FC Career Mode Mobile Edition
 
-A new Flutter project.
+This directory is the canonical Flutter application for FC Career Mode Mobile Edition. It contains the production app, pure-Dart career engine, assets, platform runners, and tests.
 
-## Getting Started
+## Development
 
-This project is a starting point for a Flutter application.
+Use a Flutter SDK compatible with the Dart constraint in `pubspec.yaml`:
 
-A few resources to get you started if this is your first Flutter project:
+```bash
+flutter pub get
+flutter format --set-exit-if-changed lib test
+flutter analyze
+flutter test
+flutter run
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Build an Android release with:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+flutter build apk --release
+```
+
+## Structure
+
+The domain engine lives under `lib/src/engine/` and has no Flutter UI dependency. Career state and seeded application data live under `lib/src/state/`. Flutter screens and shared visual components live under `lib/src/ui/`. The dashboard uses Riverpod to expose career state and trigger match simulation and youth-academy actions.
+
+## Testing
+
+The test suite includes widget coverage for the seeded dashboard and unit coverage for match simulation invariants. Before submitting changes, run `flutter analyze`, `flutter test`, and a debug build for the target platform.
+
+## Offline behavior
+
+The current application does not require a backend or network connection to launch or simulate the seeded career. Future persistence should be added behind the state-controller boundary rather than coupling storage concerns to widgets or engine models.

@@ -36,8 +36,9 @@ class MatchSimulator {
 
     final double averageRating =
         team.players.fold<int>(0, (sum, player) => sum + player.overallRating) /
-            team.players.length;
-    final double formationFactor = team.formation.defenders * 0.05 +
+        team.players.length;
+    final double formationFactor =
+        team.formation.defenders * 0.05 +
         team.formation.midfielders * 0.08 +
         team.formation.forwards * 0.1;
     final double moraleFactor = 1 + team.morale / 100.0;
@@ -53,8 +54,14 @@ class MatchSimulator {
     final double awayPower = _teamPower(away);
     final double homeAttacking = homePower * 0.55 + _random.nextDouble() * 5;
     final double awayAttacking = awayPower * 0.45 + _random.nextDouble() * 5;
-    final double homeExpectedGoals = max(0.3, (homeAttacking - awayPower * 0.3) / 6.0 + 1.0);
-    final double awayExpectedGoals = max(0.1, (awayAttacking - homePower * 0.28) / 6.0 + 0.8);
+    final double homeExpectedGoals = max(
+      0.3,
+      (homeAttacking - awayPower * 0.3) / 6.0 + 1.0,
+    );
+    final double awayExpectedGoals = max(
+      0.1,
+      (awayAttacking - homePower * 0.28) / 6.0 + 0.8,
+    );
     final int homeGoals = _rollGoals(homeExpectedGoals);
     final int awayGoals = _rollGoals(awayExpectedGoals);
 
@@ -115,22 +122,30 @@ class MatchSimulator {
     return whole + (_random.nextDouble() < remainder ? 1 : 0);
   }
 
-  List<MatchEvent> _buildEvents(TeamSetup home, TeamSetup away, int homeGoals, int awayGoals) {
+  List<MatchEvent> _buildEvents(
+    TeamSetup home,
+    TeamSetup away,
+    int homeGoals,
+    int awayGoals,
+  ) {
     final List<MatchEvent> events = [];
     int minute = 5;
     for (var i = 0; i < homeGoals + awayGoals; i++) {
       final bool isHome = i < homeGoals;
       final TeamSetup team = isHome ? home : away;
-      final TeamPlayer player = team.players[_random.nextInt(team.players.length)];
-      events.add(MatchEvent(
-        minute: minute,
-        type: MatchEventType.goal,
-        playerId: player.id,
-        playerName: player.name,
-        position: player.position,
-        description: '${player.name} scores for ${team.clubName}',
-        impact: 10,
-      ));
+      final TeamPlayer player =
+          team.players[_random.nextInt(team.players.length)];
+      events.add(
+        MatchEvent(
+          minute: minute,
+          type: MatchEventType.goal,
+          playerId: player.id,
+          playerName: player.name,
+          position: player.position,
+          description: '${player.name} scores for ${team.clubName}',
+          impact: 10,
+        ),
+      );
       minute = min(90, minute + 7 + _random.nextInt(10));
     }
     return events;

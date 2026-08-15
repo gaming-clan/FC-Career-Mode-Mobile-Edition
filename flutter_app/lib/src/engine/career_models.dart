@@ -213,11 +213,7 @@ class ClubManager {
     required this.reputation,
   });
 
-  ClubManager copyWith({
-    String? name,
-    int? experience,
-    int? reputation,
-  }) {
+  ClubManager copyWith({String? name, int? experience, int? reputation}) {
     return ClubManager(
       name: name ?? this.name,
       experience: experience ?? this.experience,
@@ -226,11 +222,7 @@ class ClubManager {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'experience': experience,
-      'reputation': reputation,
-    };
+    return {'name': name, 'experience': experience, 'reputation': reputation};
   }
 
   factory ClubManager.fromJson(Map<String, dynamic> json) {
@@ -422,7 +414,9 @@ class SeasonStats {
       goalsAgainst: json['goalsAgainst'] as int,
       leaguePosition: json['leaguePosition'] as int,
       pointsTotal: json['pointsTotal'] as int,
-      bestPlayer: BestPlayer.fromJson(json['bestPlayer'] as Map<String, dynamic>),
+      bestPlayer: BestPlayer.fromJson(
+        json['bestPlayer'] as Map<String, dynamic>,
+      ),
       topScorer: TopScorer.fromJson(json['topScorer'] as Map<String, dynamic>),
       winStreak: json['winStreak'] as int,
       currentForm: json['currentForm'] as int,
@@ -434,26 +428,14 @@ class BestPlayer {
   final String name;
   final int rating;
 
-  const BestPlayer({
-    required this.name,
-    required this.rating,
-  });
+  const BestPlayer({required this.name, required this.rating});
 
-  BestPlayer copyWith({
-    String? name,
-    int? rating,
-  }) {
-    return BestPlayer(
-      name: name ?? this.name,
-      rating: rating ?? this.rating,
-    );
+  BestPlayer copyWith({String? name, int? rating}) {
+    return BestPlayer(name: name ?? this.name, rating: rating ?? this.rating);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'rating': rating,
-    };
+    return {'name': name, 'rating': rating};
   }
 
   factory BestPlayer.fromJson(Map<String, dynamic> json) {
@@ -468,33 +450,18 @@ class TopScorer {
   final String name;
   final int goals;
 
-  const TopScorer({
-    required this.name,
-    required this.goals,
-  });
+  const TopScorer({required this.name, required this.goals});
 
-  TopScorer copyWith({
-    String? name,
-    int? goals,
-  }) {
-    return TopScorer(
-      name: name ?? this.name,
-      goals: goals ?? this.goals,
-    );
+  TopScorer copyWith({String? name, int? goals}) {
+    return TopScorer(name: name ?? this.name, goals: goals ?? this.goals);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'goals': goals,
-    };
+    return {'name': name, 'goals': goals};
   }
 
   factory TopScorer.fromJson(Map<String, dynamic> json) {
-    return TopScorer(
-      name: json['name'] as String,
-      goals: json['goals'] as int,
-    );
+    return TopScorer(name: json['name'] as String, goals: json['goals'] as int);
   }
 }
 
@@ -586,15 +553,9 @@ class MatchScore {
   final int homeScore;
   final int awayScore;
 
-  const MatchScore({
-    required this.homeScore,
-    required this.awayScore,
-  });
+  const MatchScore({required this.homeScore, required this.awayScore});
 
-  MatchScore copyWith({
-    int? homeScore,
-    int? awayScore,
-  }) {
+  MatchScore copyWith({int? homeScore, int? awayScore}) {
     return MatchScore(
       homeScore: homeScore ?? this.homeScore,
       awayScore: awayScore ?? this.awayScore,
@@ -602,10 +563,7 @@ class MatchScore {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'homeScore': homeScore,
-      'awayScore': awayScore,
-    };
+    return {'homeScore': homeScore, 'awayScore': awayScore};
   }
 
   factory MatchScore.fromJson(Map<String, dynamic> json) {
@@ -620,15 +578,10 @@ class YouthGroup {
   final List<CareerPlayer> players;
   final int facilities;
 
-  YouthGroup({
-    required List<CareerPlayer> players,
-    required this.facilities,
-  }) : players = List.unmodifiable(players);
+  YouthGroup({required List<CareerPlayer> players, required this.facilities})
+    : players = List.unmodifiable(players);
 
-  YouthGroup copyWith({
-    List<CareerPlayer>? players,
-    int? facilities,
-  }) {
+  YouthGroup copyWith({List<CareerPlayer>? players, int? facilities}) {
     return YouthGroup(
       players: players ?? this.players,
       facilities: facilities ?? this.facilities,
@@ -675,11 +628,11 @@ class CareerGameState {
     required List<MatchResult> recentMatches,
     required List<Object> transferMarketOffers,
     required this.youth,
-  })  : leagueTable = List.unmodifiable(leagueTable),
-        fixtures = List.unmodifiable(fixtures),
-        squad = List.unmodifiable(squad),
-        recentMatches = List.unmodifiable(recentMatches),
-        transferMarketOffers = List.unmodifiable(transferMarketOffers);
+  }) : leagueTable = List.unmodifiable(leagueTable),
+       fixtures = List.unmodifiable(fixtures),
+       squad = List.unmodifiable(squad),
+       recentMatches = List.unmodifiable(recentMatches),
+       transferMarketOffers = List.unmodifiable(transferMarketOffers);
 
   CareerGameState copyWith({
     int? currentSeason,
@@ -726,21 +679,29 @@ class CareerGameState {
     return CareerGameState(
       currentSeason: json['currentSeason'] as int,
       currentMatchday: json['currentMatchday'] as int,
-      playerClub: CareerClub.fromJson(json['playerClub'] as Map<String, dynamic>),
+      playerClub: CareerClub.fromJson(
+        json['playerClub'] as Map<String, dynamic>,
+      ),
       leagueTable: (json['leagueTable'] as List<dynamic>)
-          .map((item) => LeagueTableEntry.fromJson(item as Map<String, dynamic>))
+          .map(
+            (item) => LeagueTableEntry.fromJson(item as Map<String, dynamic>),
+          )
           .toList(),
       fixtures: (json['fixtures'] as List<dynamic>)
           .map((item) => Fixture.fromJson(item as Map<String, dynamic>))
           .toList(),
-      seasonStats: SeasonStats.fromJson(json['seasonStats'] as Map<String, dynamic>),
+      seasonStats: SeasonStats.fromJson(
+        json['seasonStats'] as Map<String, dynamic>,
+      ),
       squad: (json['squad'] as List<dynamic>)
           .map((item) => CareerPlayer.fromJson(item as Map<String, dynamic>))
           .toList(),
       recentMatches: (json['recentMatches'] as List<dynamic>)
           .map((item) => MatchResult.fromJson(item as Map<String, dynamic>))
           .toList(),
-      transferMarketOffers: List<Object>.from(json['transferMarketOffers'] as List<dynamic>),
+      transferMarketOffers: List<Object>.from(
+        json['transferMarketOffers'] as List<dynamic>,
+      ),
       youth: YouthGroup.fromJson(json['youth'] as Map<String, dynamic>),
     );
   }

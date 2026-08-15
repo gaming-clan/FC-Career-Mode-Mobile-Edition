@@ -17,7 +17,9 @@ class AppColors {
   static const Color primary = Color(0xFFBEC6E0);
   static const Color onPrimary = Color(0xFF283044);
   static const Color primaryContainer = Color(0xFF0F172A);
-  static const Color electricLime = Color(0xFFA4D64C); // secondary in original mapping
+  static const Color electricLime = Color(
+    0xFFA4D64C,
+  ); // secondary in original mapping
   static const Color onElectricLime = Color(0xFF233600);
   static const Color electricLimeContainer = Color(0xFF719E13);
   static const Color cyanSky = Color(0xFF7BD0FF); // tertiary

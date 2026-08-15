@@ -1,195 +1,293 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/theme/colors.dart';
+import '../../engine/engine.dart';
+import '../../state/career_state.dart';
 import '../shared/glass_card.dart';
 import '../shared/neon_button.dart';
-import '../../core/theme/colors.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(careerControllerProvider);
+    final controller = ref.read(careerControllerProvider.notifier);
+    final nextFixture = _nextFixture(state);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('FC Career Mode'),
+        title: const Text('FC CAREER MODE'),
         actions: [
           IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.settings),
+            tooltip: 'Youth intake',
+            onPressed: controller.addYouthIntake,
+            icon: const Icon(Icons.school_outlined),
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(16, 18, 16, 28),
           children: [
-            const GlassCard(
-              child: _NextMatchCardContents(),
+            _HeroHeader(state: state),
+            const SizedBox(height: 16),
+            _NextFixtureCard(
+              fixture: nextFixture,
+              onPlay: nextFixture == null ? null : controller.playNextFixture,
             ),
-            const SizedBox(height: 18),
-            const GlassCard(
-              child: _MiniStatsSection(),
-            ),
-            const SizedBox(height: 18),
-            const GlassCard(
-              child: _RecentActivitySection(),
-            ),
-            const SizedBox(height: 22),
-            NeonButton(
-              onPressed: () {},
-              label: 'PLAY NEXT MATCH',
-              expanded: true,
-            ),
+            const SizedBox(height: 16),
+            _SeasonOverview(state: state),
+            const SizedBox(height: 16),
+            _SquadOverview(state: state),
+            const SizedBox(height: 16),
+            _YouthOverview(state: state),
           ],
         ),
+      ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: 0,
+        onDestinationSelected: (_) {},
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.dashboard_outlined),
+            label: 'Overview',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.groups_outlined),
+            label: 'Squad',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.swap_horiz),
+            label: 'Transfers',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.calendar_month_outlined),
+            label: 'Fixtures',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Fixture? _nextFixture(CareerGameState state) {
+    for (final fixture in state.fixtures) {
+      if (!fixture.played) return fixture;
+    }
+    return null;
+  }
+}
+
+class _HeroHeader extends StatelessWidget {
+  final CareerGameState state;
+
+  const _HeroHeader({required this.state});
+
+  @override
+  Widget build(BuildContext context) {
+    return GlassCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            state.playerClub.name,
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${state.playerClub.division}  •  Season ${state.currentSeason}',
+            style: const TextStyle(color: AppColors.textLow),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              _Metric(label: 'Matchday', value: '${state.currentMatchday}'),
+              _Metric(
+                label: 'Position',
+                value: '${state.seasonStats.leaguePosition}',
+              ),
+              _Metric(
+                label: 'Points',
+                value: '${state.seasonStats.pointsTotal}',
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
 }
 
-class _NextMatchCardContents extends StatelessWidget {
-  const _NextMatchCardContents();
+class _NextFixtureCard extends StatelessWidget {
+  final Fixture? fixture;
+  final VoidCallback? onPlay;
+
+  const _NextFixtureCard({required this.fixture, required this.onPlay});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    'Next Match',
-                    style: TextStyle(
-                      color: AppColors.cyanSky,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'FC Career vs Thunder City',
-                    style: TextStyle(
-                      color: AppColors.textHigh,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 20,
-                    ),
-                  ),
-                ],
+    return GlassCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'NEXT FIXTURE',
+            style: TextStyle(
+              color: AppColors.cyanSky,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 14),
+          if (fixture == null)
+            const Text(
+              'Season complete',
+              style: TextStyle(color: AppColors.textHigh, fontSize: 20),
+            )
+          else ...[
+            Text(
+              '${fixture!.homeClubName}  v  ${fixture!.awayClubName}',
+              style: const TextStyle(
+                color: AppColors.textHigh,
+                fontSize: 19,
+                fontWeight: FontWeight.w700,
               ),
             ),
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: AppColors.electricLime,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(
-                Icons.sports_soccer,
-                color: AppColors.deepNavy,
-              ),
+            const SizedBox(height: 6),
+            Text(
+              'Matchday ${fixture!.matchday}  •  ${fixture!.homeFormation ?? '4-3-3'}',
+              style: const TextStyle(color: AppColors.textLow),
             ),
+            const SizedBox(height: 16),
+            NeonButton(label: 'PLAY MATCH', onPressed: onPlay, expanded: true),
           ],
-        ),
-        const SizedBox(height: 18),
-        const Text(
-          'Tomorrow • 19:45 • Stadium Night League',
-          style: TextStyle(
-            color: AppColors.textLow,
-            fontSize: 13,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            _StatisticTile(label: 'Form', value: 'WWDWW'),
-            _StatisticTile(label: 'xG', value: '2.1'),
-            _StatisticTile(label: 'Injuries', value: '2'),
-          ],
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
 
-class _MiniStatsSection extends StatelessWidget {
-  const _MiniStatsSection();
+class _SeasonOverview extends StatelessWidget {
+  final CareerGameState state;
+
+  const _SeasonOverview({required this.state});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Quick Stats',
-          style: TextStyle(
-            color: AppColors.cyanSky,
-            fontWeight: FontWeight.w700,
-            fontSize: 14,
+    final stats = state.seasonStats;
+    return GlassCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'SEASON OVERVIEW',
+            style: TextStyle(
+              color: AppColors.cyanSky,
+              fontWeight: FontWeight.w700,
+            ),
           ),
-        ),
-        const SizedBox(height: 14),
-        Row(
-          children: const [
-            Expanded(child: _ProgressMetric(label: 'Possession', value: '62%', progress: 0.62)),
-            SizedBox(width: 12),
-            Expanded(child: _ProgressMetric(label: 'Morale', value: '88', progress: 0.88)),
-          ],
-        ),
-        const SizedBox(height: 14),
-        Row(
-          children: const [
-            Expanded(child: _ProgressMetric(label: 'Squad Depth', value: '74', progress: 0.74)),
-            SizedBox(width: 12),
-            Expanded(child: _ProgressMetric(label: 'Budget', value: '€12M', progress: 0.48)),
-          ],
-        ),
-      ],
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              _Metric(
+                label: 'Record',
+                value: '${stats.wins}-${stats.draws}-${stats.losses}',
+              ),
+              _Metric(
+                label: 'Goals',
+                value: '${stats.goalsFor}:${stats.goalsAgainst}',
+              ),
+              _Metric(label: 'Form', value: '${stats.currentForm}%'),
+            ],
+          ),
+          const SizedBox(height: 16),
+          LinearProgressIndicator(
+            value: (stats.currentForm / 100).clamp(0.0, 1.0),
+            minHeight: 8,
+            color: AppColors.electricLime,
+            backgroundColor: AppColors.lightSlate.withValues(alpha: 0.35),
+          ),
+        ],
+      ),
     );
   }
 }
 
-class _RecentActivitySection extends StatelessWidget {
-  const _RecentActivitySection();
+class _SquadOverview extends StatelessWidget {
+  final CareerGameState state;
+
+  const _SquadOverview({required this.state});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Recent Activity',
-          style: TextStyle(
-            color: AppColors.cyanSky,
-            fontWeight: FontWeight.w700,
-            fontSize: 14,
+    final average = state.squad.isEmpty
+        ? 0
+        : (state.squad
+                      .map((player) => player.overallRating)
+                      .reduce((a, b) => a + b) /
+                  state.squad.length)
+              .round();
+    return GlassCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'SQUAD',
+            style: TextStyle(
+              color: AppColors.cyanSky,
+              fontWeight: FontWeight.w700,
+            ),
           ),
-        ),
-        const SizedBox(height: 14),
-        const _ActivityRow(label: 'Player form improved', value: 'L. Martinez +6'),
-        const Divider(color: Colors.white12),
-        const _ActivityRow(label: 'New offer received', value: 'Striker target'),
-        const Divider(color: Colors.white12),
-        const _ActivityRow(label: 'Training upgrade available', value: 'Youth academy'),
-      ],
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              _Metric(label: 'Players', value: '${state.squad.length}'),
+              _Metric(label: 'Average OVR', value: '$average'),
+              _Metric(
+                label: 'Budget',
+                value: _formatMoney(state.playerClub.budget),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
 
-class _StatisticTile extends StatelessWidget {
+class _YouthOverview extends StatelessWidget {
+  final CareerGameState state;
+
+  const _YouthOverview({required this.state});
+
+  @override
+  Widget build(BuildContext context) {
+    return GlassCard(
+      child: Row(
+        children: [
+          const Icon(
+            Icons.school_outlined,
+            color: AppColors.electricLime,
+            size: 28,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              '${state.youth.players.length} youth players  •  Academy level ${state.youth.facilities}',
+              style: const TextStyle(color: AppColors.textHigh),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Metric extends StatelessWidget {
   final String label;
   final String value;
 
-  const _StatisticTile({
-    required this.label,
-    required this.value,
-  });
+  const _Metric({required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -199,18 +297,15 @@ class _StatisticTile extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
-              color: AppColors.textLow,
-              fontSize: 12,
-            ),
+            style: const TextStyle(color: AppColors.textLow, fontSize: 12),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 4),
           Text(
             value,
             style: const TextStyle(
               color: AppColors.textHigh,
+              fontSize: 17,
               fontWeight: FontWeight.w700,
-              fontSize: 16,
             ),
           ),
         ],
@@ -219,88 +314,8 @@ class _StatisticTile extends StatelessWidget {
   }
 }
 
-class _ProgressMetric extends StatelessWidget {
-  final String label;
-  final String value;
-  final double progress;
-
-  const _ProgressMetric({
-    required this.label,
-    required this.value,
-    required this.progress,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            color: AppColors.textLow,
-            fontSize: 12,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          value,
-          style: const TextStyle(
-            color: AppColors.textHigh,
-            fontWeight: FontWeight.w700,
-            fontSize: 18,
-          ),
-        ),
-        const SizedBox(height: 8),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: LinearProgressIndicator(
-            value: progress,
-            color: AppColors.electricLime,
-            backgroundColor: AppColors.lightSlate.withOpacity(0.32),
-            minHeight: 8,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _ActivityRow extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const _ActivityRow({
-    required this.label,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Text(
-              label,
-              style: const TextStyle(
-                color: AppColors.textHigh,
-                fontSize: 14,
-              ),
-            ),
-          ),
-          Text(
-            value,
-            style: const TextStyle(
-              color: AppColors.cyanSky,
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+String _formatMoney(double amount) {
+  if (amount >= 1000000) return '€${(amount / 1000000).toStringAsFixed(1)}M';
+  if (amount >= 1000) return '€${(amount / 1000).toStringAsFixed(0)}K';
+  return '€${amount.toStringAsFixed(0)}';
 }

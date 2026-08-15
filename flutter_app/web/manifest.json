@@ -1,11 +1,11 @@
 {
-    "name": "flutter_app",
-    "short_name": "flutter_app",
+    "name": "FC Career Mode Mobile Edition",
+    "short_name": "FC Career Mode",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#07111F",
+    "theme_color": "#07111F",
+    "description": "Offline football career management simulation.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

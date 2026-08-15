@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:flutter_app/src/engine/match_models.dart';
-import 'package:flutter_app/src/engine/match_simulation.dart';
+import 'package:fc_career_mode/src/engine/match_models.dart';
+import 'package:fc_career_mode/src/engine/match_simulation.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -19,14 +19,16 @@ void main() {
     return TeamSetup(
       clubId: name.hashCode,
       clubName: name,
-      players: players ?? const [
-        TeamPlayer(
-          id: 1,
-          name: 'Test Player',
-          position: 'ST',
-          overallRating: 80,
-        ),
-      ],
+      players:
+          players ??
+          const [
+            TeamPlayer(
+              id: 1,
+              name: 'Test Player',
+              position: 'ST',
+              overallRating: 80,
+            ),
+          ],
       formation: formation,
       morale: 75,
     );
@@ -42,10 +44,9 @@ void main() {
   });
 
   test('keeps possession balanced and events within regulation time', () {
-    final prediction = MatchSimulator(Random(1)).simulate(
-      team('Home'),
-      team('Away'),
-    );
+    final prediction = MatchSimulator(
+      Random(1),
+    ).simulate(team('Home'), team('Away'));
 
     expect(
       prediction.stats.home.possession + prediction.stats.away.possession,
@@ -56,9 +57,10 @@ void main() {
       prediction.homeGoals + prediction.awayGoals,
     );
     expect(
-      prediction.events.every((event) => event.minute >= 1 && event.minute <= 90),
+      prediction.events.every(
+        (event) => event.minute >= 1 && event.minute <= 90,
+      ),
       isTrue,
     );
   });
 }
-

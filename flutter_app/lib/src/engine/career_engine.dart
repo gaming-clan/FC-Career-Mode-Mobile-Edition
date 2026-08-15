@@ -7,7 +7,8 @@ import 'match_simulation.dart';
 class CareerEngine {
   final MatchSimulator _simulator;
 
-  CareerEngine([MatchSimulator? simulator]) : _simulator = simulator ?? MatchSimulator();
+  CareerEngine([MatchSimulator? simulator])
+    : _simulator = simulator ?? MatchSimulator();
 
   CareerGameState initializeCareer({
     required CareerClub playerClub,
@@ -62,11 +63,19 @@ class CareerEngine {
     );
   }
 
-  CareerGameState playFixture(CareerGameState state, Fixture fixture, TeamSetup homeTeam, TeamSetup awayTeam) {
+  CareerGameState playFixture(
+    CareerGameState state,
+    Fixture fixture,
+    TeamSetup homeTeam,
+    TeamSetup awayTeam,
+  ) {
     final prediction = _simulator.simulate(homeTeam, awayTeam);
     final playedFixture = fixture.copyWith(
       played: true,
-      result: MatchScore(homeScore: prediction.homeGoals, awayScore: prediction.awayGoals),
+      result: MatchScore(
+        homeScore: prediction.homeGoals,
+        awayScore: prediction.awayGoals,
+      ),
     );
 
     final recentMatch = MatchResult(
@@ -78,23 +87,103 @@ class CareerEngine {
       duration: prediction.duration,
     );
 
-    final updatedFixtures = state.fixtures.map((item) => item.id == fixture.id ? playedFixture : item).toList();
-    final updatedRecentMatches = [recentMatch, ...state.recentMatches].take(10).toList();
+    final updatedFixtures = state.fixtures
+        .map((item) => item.id == fixture.id ? playedFixture : item)
+        .toList();
+    final updatedRecentMatches = [
+      recentMatch,
+      ...state.recentMatches,
+    ].take(10).toList();
     final updatedMatchday = state.currentMatchday + 1;
+    final playerClubIsHome = fixture.homeClubId == state.playerClub.id;
+    final goalsFor = playerClubIsHome
+        ? prediction.homeGoals
+        : prediction.awayGoals;
+    final goalsAgainst = playerClubIsHome
+        ? prediction.awayGoals
+        : prediction.homeGoals;
+    final won = goalsFor > goalsAgainst;
+    final drawn = goalsFor == goalsAgainst;
+    final updatedTable = _updateLeagueTable(
+      state.leagueTable,
+      fixture,
+      prediction.homeGoals,
+      prediction.awayGoals,
+    );
 
     return state.copyWith(
       fixtures: updatedFixtures,
+      leagueTable: updatedTable,
       recentMatches: updatedRecentMatches,
       currentMatchday: updatedMatchday,
       seasonStats: state.seasonStats.copyWith(
         matchesPlayed: state.seasonStats.matchesPlayed + 1,
-        goalsFor: state.seasonStats.goalsFor + prediction.homeGoals,
-        goalsAgainst: state.seasonStats.goalsAgainst + prediction.awayGoals,
-        wins: state.seasonStats.wins + (prediction.homeGoals > prediction.awayGoals ? 1 : 0),
-        draws: state.seasonStats.draws + (prediction.homeGoals == prediction.awayGoals ? 1 : 0),
-        losses: state.seasonStats.losses + (prediction.homeGoals < prediction.awayGoals ? 1 : 0),
+        goalsFor: state.seasonStats.goalsFor + goalsFor,
+        goalsAgainst: state.seasonStats.goalsAgainst + goalsAgainst,
+        wins: state.seasonStats.wins + (won ? 1 : 0),
+        draws: state.seasonStats.draws + (drawn ? 1 : 0),
+        losses: state.seasonStats.losses + (!won && !drawn ? 1 : 0),
+        pointsTotal:
+            state.seasonStats.pointsTotal +
+            (won
+                ? 3
+                : drawn
+                ? 1
+                : 0),
+        winStreak: won ? state.seasonStats.winStreak + 1 : 0,
+        currentForm:
+            ((state.seasonStats.currentForm * 4) +
+                (won
+                    ? 100
+                    : drawn
+                    ? 60
+                    : 20)) ~/
+            5,
       ),
     );
+  }
+
+  List<LeagueTableEntry> _updateLeagueTable(
+    List<LeagueTableEntry> table,
+    Fixture fixture,
+    int homeGoals,
+    int awayGoals,
+  ) {
+    return table.map((entry) {
+      final isHome = entry.clubId == fixture.homeClubId;
+      final isAway = entry.clubId == fixture.awayClubId;
+      if (!isHome && !isAway) return entry;
+
+      final goalsFor = isHome ? homeGoals : awayGoals;
+      final goalsAgainst = isHome ? awayGoals : homeGoals;
+      final won = goalsFor > goalsAgainst;
+      final drawn = goalsFor == goalsAgainst;
+      return entry.copyWith(
+        played: entry.played + 1,
+        won: entry.won + (won ? 1 : 0),
+        drawn: entry.drawn + (drawn ? 1 : 0),
+        lost: entry.lost + (!won && !drawn ? 1 : 0),
+        goalsFor: entry.goalsFor + goalsFor,
+        goalsAgainst: entry.goalsAgainst + goalsAgainst,
+        goalDifference: entry.goalDifference + goalsFor - goalsAgainst,
+        points:
+            entry.points +
+            (won
+                ? 3
+                : drawn
+                ? 1
+                : 0),
+        average:
+            (entry.points +
+                    (won
+                        ? 3
+                        : drawn
+                        ? 1
+                        : 0))
+                .toDouble() /
+            (entry.played + 1),
+      );
+    }).toList();
   }
 
   List<CareerPlayer> generateYouthIntake({
@@ -105,26 +194,28 @@ class CareerEngine {
     final List<CareerPlayer> youthPlayers = [];
     for (var i = 0; i < count; i++) {
       final int age = 16 + random.nextInt(3);
-      youthPlayers.add(CareerPlayer(
-        id: startingId + i,
-        firstName: 'Youth',
-        lastName: 'Player ${startingId + i}',
-        age: age,
-        position: ['GK', 'DEF', 'MID', 'FWD'][random.nextInt(4)],
-        overallRating: 50 + random.nextInt(20),
-        potential: 65 + random.nextInt(30),
-        pace: 40 + random.nextInt(60),
-        shooting: 35 + random.nextInt(60),
-        passing: 35 + random.nextInt(60),
-        dribbling: 35 + random.nextInt(60),
-        defense: 35 + random.nextInt(60),
-        physical: 35 + random.nextInt(60),
-        morale: 60 + random.nextInt(40),
-        form: 50 + random.nextInt(30),
-        contractEndYear: DateTime.now().year + 2,
-        injuryWeeks: 0,
-        isYouthPlayer: true,
-      ));
+      youthPlayers.add(
+        CareerPlayer(
+          id: startingId + i,
+          firstName: 'Youth',
+          lastName: 'Player ${startingId + i}',
+          age: age,
+          position: ['GK', 'DEF', 'MID', 'FWD'][random.nextInt(4)],
+          overallRating: 50 + random.nextInt(20),
+          potential: 65 + random.nextInt(30),
+          pace: 40 + random.nextInt(60),
+          shooting: 35 + random.nextInt(60),
+          passing: 35 + random.nextInt(60),
+          dribbling: 35 + random.nextInt(60),
+          defense: 35 + random.nextInt(60),
+          physical: 35 + random.nextInt(60),
+          morale: 60 + random.nextInt(40),
+          form: 50 + random.nextInt(30),
+          contractEndYear: DateTime.now().year + 2,
+          injuryWeeks: 0,
+          isYouthPlayer: true,
+        ),
+      );
     }
     return youthPlayers;
   }

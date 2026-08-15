@@ -123,11 +123,7 @@ class PlayerRating {
     required this.influence,
   });
 
-  PlayerRating copyWith({
-    int? playerId,
-    double? rating,
-    double? influence,
-  }) {
+  PlayerRating copyWith({int? playerId, double? rating, double? influence}) {
     return PlayerRating(
       playerId: playerId ?? this.playerId,
       rating: rating ?? this.rating,
@@ -136,11 +132,7 @@ class PlayerRating {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'playerId': playerId,
-      'rating': rating,
-      'influence': influence,
-    };
+    return {'playerId': playerId, 'rating': rating, 'influence': influence};
   }
 
   factory PlayerRating.fromJson(Map<String, dynamic> json) {
@@ -159,7 +151,8 @@ class ExpectedGoalModel {
     required int positioning,
     required int teamMomentum,
   }) {
-    final double shotQuality = (shooting * 0.45) + (pace * 0.2) + (positioning * 0.2);
+    final double shotQuality =
+        (shooting * 0.45) + (pace * 0.2) + (positioning * 0.2);
     final double momentumBonus = teamMomentum / 100.0;
     final double xg = shotQuality * 0.008 + momentumBonus * 0.02;
     return xg.clamp(0.01, 0.75);

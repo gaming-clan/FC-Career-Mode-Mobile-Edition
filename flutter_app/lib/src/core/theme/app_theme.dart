@@ -28,7 +28,7 @@ class AppTheme {
       // Stats / Monospaced
       extensions: <ThemeExtension<dynamic>>[],
       appBarTheme: AppBarTheme(
-        backgroundColor: AppColors.slateGray.withOpacity(0.85),
+        backgroundColor: AppColors.slateGray.withValues(alpha: 0.85),
         elevation: 0,
         centerTitle: true,
         titleTextStyle: GoogleFonts.archivoNarrow(
@@ -39,11 +39,9 @@ class AppTheme {
         iconTheme: const IconThemeData(color: AppColors.textHigh),
       ),
       cardTheme: CardThemeData(
-        color: AppColors.slateGray.withOpacity(0.5),
+        color: AppColors.slateGray.withValues(alpha: 0.5),
         surfaceTintColor: AppColors.slateGray,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -68,7 +66,9 @@ class AppTheme {
         backgroundColor: AppColors.electricLime,
         foregroundColor: AppColors.deepNavy,
       ),
-      dialogTheme: DialogThemeData(backgroundColor: AppColors.slateGray.withOpacity(0.9)),
+      dialogTheme: DialogThemeData(
+        backgroundColor: AppColors.slateGray.withValues(alpha: 0.9),
+      ),
       // Custom text styles for the design system
       textTheme: GoogleFonts.interTextTheme().copyWith(
         headlineLarge: GoogleFonts.archivoNarrow(

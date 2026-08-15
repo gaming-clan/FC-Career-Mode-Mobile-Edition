@@ -1,4 +1,15 @@
-enum MatchEventType { goal, assist, tackle, pass, miss, save, injury, yellow, red, substitution }
+enum MatchEventType {
+  goal,
+  assist,
+  tackle,
+  pass,
+  miss,
+  save,
+  injury,
+  yellow,
+  red,
+  substitution,
+}
 
 extension MatchEventTypeExtensions on MatchEventType {
   String get name {
@@ -189,33 +200,18 @@ class Cards {
   final int yellow;
   final int red;
 
-  const Cards({
-    required this.yellow,
-    required this.red,
-  });
+  const Cards({required this.yellow, required this.red});
 
-  Cards copyWith({
-    int? yellow,
-    int? red,
-  }) {
-    return Cards(
-      yellow: yellow ?? this.yellow,
-      red: red ?? this.red,
-    );
+  Cards copyWith({int? yellow, int? red}) {
+    return Cards(yellow: yellow ?? this.yellow, red: red ?? this.red);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'yellow': yellow,
-      'red': red,
-    };
+    return {'yellow': yellow, 'red': red};
   }
 
   factory Cards.fromJson(Map<String, dynamic> json) {
-    return Cards(
-      yellow: json['yellow'] as int,
-      red: json['red'] as int,
-    );
+    return Cards(yellow: json['yellow'] as int, red: json['red'] as int);
   }
 }
 
@@ -432,12 +428,7 @@ class ManOfMatch {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'playerId': playerId,
-      'name': name,
-      'team': team,
-      'rating': rating,
-    };
+    return {'playerId': playerId, 'name': name, 'team': team, 'rating': rating};
   }
 
   factory ManOfMatch.fromJson(Map<String, dynamic> json) {
@@ -504,7 +495,9 @@ class MatchResult {
           .map((item) => MatchEvent.fromJson(item as Map<String, dynamic>))
           .toList(),
       stats: MatchResultStats.fromJson(json['stats'] as Map<String, dynamic>),
-      manOfMatch: ManOfMatch.fromJson(json['manOfMatch'] as Map<String, dynamic>),
+      manOfMatch: ManOfMatch.fromJson(
+        json['manOfMatch'] as Map<String, dynamic>,
+      ),
       duration: MatchDurationExtensions.fromString(json['duration'] as String),
     );
   }
@@ -514,26 +507,14 @@ class MatchResultStats {
   final MatchStatistics home;
   final MatchStatistics away;
 
-  const MatchResultStats({
-    required this.home,
-    required this.away,
-  });
+  const MatchResultStats({required this.home, required this.away});
 
-  MatchResultStats copyWith({
-    MatchStatistics? home,
-    MatchStatistics? away,
-  }) {
-    return MatchResultStats(
-      home: home ?? this.home,
-      away: away ?? this.away,
-    );
+  MatchResultStats copyWith({MatchStatistics? home, MatchStatistics? away}) {
+    return MatchResultStats(home: home ?? this.home, away: away ?? this.away);
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'home': home.toJson(),
-      'away': away.toJson(),
-    };
+    return {'home': home.toJson(), 'away': away.toJson()};
   }
 
   factory MatchResultStats.fromJson(Map<String, dynamic> json) {
