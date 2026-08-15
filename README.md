@@ -2,7 +2,7 @@
 
 FC Career Mode Mobile Edition is an offline football-management simulation built with **Flutter and Dart**. The application targets Android first and uses a pure-Dart game engine so match simulation, career progression, squad data, and season statistics remain independent from the Flutter presentation layer.
 
-> The React Native/TypeScript implementation has been removed from the active repository. `flutter_app/` is now the sole application project.
+> The React Native/TypeScript implementation has been removed from the active repository. `fc_career_mode/` is now the sole application project.
 
 ## Current capabilities
 
@@ -10,18 +10,18 @@ The migrated application currently provides a functional career dashboard with s
 
 | Area | Flutter implementation |
 |---|---|
-| Application entry point | `flutter_app/lib/main.dart` |
-| Career state | `flutter_app/lib/src/state/career_state.dart` |
-| Career engine | `flutter_app/lib/src/engine/career_engine.dart` |
-| Match simulation | `flutter_app/lib/src/engine/match_simulation.dart` |
-| Domain models | `flutter_app/lib/src/engine/` |
-| UI | `flutter_app/lib/src/ui/` |
-| Tests | `flutter_app/test/` |
-| Assets | `flutter_app/assets/images/` |
+| Application entry point | `fc_career_mode/lib/main.dart` |
+| Career state | `fc_career_mode/lib/src/state/career_state.dart` |
+| Career engine | `fc_career_mode/lib/src/engine/career_engine.dart` |
+| Match simulation | `fc_career_mode/lib/src/engine/match_simulation.dart` |
+| Domain models | `fc_career_mode/lib/src/engine/` |
+| UI | `fc_career_mode/lib/src/ui/` |
+| Tests | `fc_career_mode/test/` |
+| Assets | `fc_career_mode/assets/images/` |
 
 ## Requirements
 
-Install Flutter with a Dart SDK compatible with the version declared in `flutter_app/pubspec.yaml`. Android development additionally requires Android Studio, an Android SDK, and either an emulator or a USB-connected device. The application is offline-first and does not require a server, database service, JavaScript runtime, or network connection during gameplay.
+Install Flutter with a Dart SDK compatible with the version declared in `fc_career_mode/pubspec.yaml`. Android development additionally requires Android Studio, an Android SDK, and either an emulator or a USB-connected device. The application is offline-first and does not require a server, database service, JavaScript runtime, or network connection during gameplay.
 
 ## Getting started
 
@@ -29,7 +29,7 @@ Clone the repository and enter the Flutter project:
 
 ```bash
 git clone https://github.com/gaming-clan/FC-Career-Mode-Mobile-Edition.git
-cd FC-Career-Mode-Mobile-Edition/flutter_app
+cd FC-Career-Mode-Mobile-Edition/fc_career_mode
 flutter pub get
 flutter analyze
 flutter test
@@ -61,7 +61,7 @@ The initial career is intentionally seeded in `CareerController` so the applicat
 Run the complete Flutter verification set before submitting changes:
 
 ```bash
-cd flutter_app
+cd fc_career_mode
 flutter format --set-exit-if-changed lib test
 flutter analyze
 flutter test
@@ -72,7 +72,7 @@ The test suite covers dashboard rendering and match-simulation invariants, inclu
 
 ## Repository hygiene
 
-The repository contains only the Flutter application as an active build target. Generated folders such as `flutter_app/.dart_tool/`, `flutter_app/build/`, and platform-specific generated files should remain ignored by Git. Do not reintroduce JavaScript or Expo tooling unless the project requirements explicitly change.
+The repository contains only the Flutter application as an active build target. Generated folders such as `fc_career_mode/.dart_tool/`, `fc_career_mode/build/`, and platform-specific generated files should remain ignored by Git. Do not reintroduce JavaScript or Expo tooling unless the project requirements explicitly change.
 
 ## License
 
