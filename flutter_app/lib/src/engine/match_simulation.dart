@@ -26,13 +26,29 @@ class MatchSimulator {
   MatchSimulator([Random? random]) : _random = random ?? Random.secure();
 
   double _teamPower(TeamSetup team) {
-    final double averageRating = team.players.fold<int>(0, (sum, player) => sum + player.overallRating) / team.players.length;
-    final double formationFactor = team.formation.defenders * 0.05 + team.formation.midfielders * 0.08 + team.formation.forwards * 0.1;
+    if (team.players.isEmpty) {
+      throw ArgumentError.value(
+        team.clubName,
+        'team.players',
+        'A team must contain at least one player',
+      );
+    }
+
+    final double averageRating =
+        team.players.fold<int>(0, (sum, player) => sum + player.overallRating) /
+            team.players.length;
+    final double formationFactor = team.formation.defenders * 0.05 +
+        team.formation.midfielders * 0.08 +
+        team.formation.forwards * 0.1;
     final double moraleFactor = 1 + team.morale / 100.0;
     return averageRating * moraleFactor + formationFactor * 6.0;
   }
 
   MatchPrediction simulate(TeamSetup home, TeamSetup away) {
+    if (home.players.isEmpty || away.players.isEmpty) {
+      throw ArgumentError('Both teams must contain at least one player');
+    }
+
     final double homePower = _teamPower(home);
     final double awayPower = _teamPower(away);
     final double homeAttacking = homePower * 0.55 + _random.nextDouble() * 5;
@@ -42,10 +58,11 @@ class MatchSimulator {
     final int homeGoals = _rollGoals(homeExpectedGoals);
     final int awayGoals = _rollGoals(awayExpectedGoals);
 
+    final int homePossession = 45 + _random.nextInt(11);
     final stats = MatchResultStats(
       home: MatchStatistics(
         team: home.clubName,
-        possession: 45 + _random.nextInt(11),
+        possession: homePossession,
         shots: 6 + _random.nextInt(11),
         shotsOnTarget: 2 + _random.nextInt(7),
         passes: 320 + _random.nextInt(181),
@@ -58,7 +75,7 @@ class MatchSimulator {
       ),
       away: MatchStatistics(
         team: away.clubName,
-        possession: 35 + _random.nextInt(11),
+        possession: 100 - homePossession,
         shots: 5 + _random.nextInt(10),
         shotsOnTarget: 1 + _random.nextInt(6),
         passes: 280 + _random.nextInt(151),
@@ -114,7 +131,7 @@ class MatchSimulator {
         description: '${player.name} scores for ${team.clubName}',
         impact: 10,
       ));
-      minute += 7 + _random.nextInt(10);
+      minute = min(90, minute + 7 + _random.nextInt(10));
     }
     return events;
   }
